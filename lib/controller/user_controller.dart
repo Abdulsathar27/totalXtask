@@ -1,7 +1,9 @@
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 import '../core/services/firestore_service.dart';
@@ -14,18 +16,56 @@ class UserController extends ChangeNotifier {
   final FirestoreService _firestoreService =
       FirestoreService();
 
+  final ImagePicker _imagePicker = ImagePicker();
+
   final Uuid _uuid = const Uuid();
+
+  final TextEditingController nameController =
+      TextEditingController();
+
+  final TextEditingController phoneController =
+      TextEditingController();
+
+  final TextEditingController ageController =
+      TextEditingController();
+
+  final GlobalKey<FormState> formKey =
+      GlobalKey<FormState>();
 
   bool _isLoading = false;
 
+  File? _selectedImage;
+
   bool get isLoading => _isLoading;
 
-  Future<void> addUser({
-    required String name,
-    required String phone,
-    required int age,
-    required File imageFile,
-  }) async {
+  File? get selectedImage => _selectedImage;
+
+  Future<void> pickImage() async {
+    try {
+      final XFile? pickedFile =
+          await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+      );
+
+      if (pickedFile != null) {
+        _selectedImage = File(pickedFile.path);
+
+        notifyListeners();
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> addUser() async {
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
+
+    if (_selectedImage == null) {
+      throw Exception('Please select an image');
+    }
+
     try {
       _isLoading = true;
 
@@ -33,21 +73,23 @@ class UserController extends ChangeNotifier {
 
       final String imageUrl =
           await _storageService.uploadUserImage(
-        imageFile,
+        _selectedImage!,
       );
 
       final String userId = _uuid.v4();
 
       final UserModel user = UserModel(
         id: userId,
-        name: name,
-        phone: phone,
-        age: age,
+        name: nameController.text.trim(),
+        phone: phoneController.text.trim(),
+        age: int.parse(ageController.text.trim()),
         imageUrl: imageUrl,
         createdAt: Timestamp.now(),
       );
 
       await _firestoreService.addUser(user);
+
+      clearFields();
     } catch (e) {
       rethrow;
     } finally {
@@ -55,5 +97,24 @@ class UserController extends ChangeNotifier {
 
       notifyListeners();
     }
+  }
+
+  void clearFields() {
+    nameController.clear();
+    phoneController.clear();
+    ageController.clear();
+
+    _selectedImage = null;
+
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    phoneController.dispose();
+    ageController.dispose();
+
+    super.dispose();
   }
 }
