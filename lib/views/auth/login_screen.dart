@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:totalxtask/controller/auth_controller.dart';
 import 'package:totalxtask/views/add_users/add_user_screen.dart';
+import 'package:totalxtask/views/home/home_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -50,7 +51,7 @@ class LoginScreen extends StatelessWidget {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => const AddUserScreen(),
+                                        builder: (_) => const HomeScreen(),
                                       ),
                                     );
                                   }
