@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:totalxtask/controller/auth_controller.dart';
-
-
+import 'package:totalxtask/views/add_users/add_user_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -31,9 +30,7 @@ class LoginScreen extends StatelessWidget {
 
                     const Text(
                       'Google Authentication',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(fontSize: 16),
                     ),
 
                     const SizedBox(height: 40),
@@ -50,33 +47,24 @@ class LoginScreen extends StatelessWidget {
                                       .signInWithGoogle();
 
                                   if (result && context.mounted) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'Login Successful',
-                                        ),
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const AddUserScreen(),
                                       ),
                                     );
                                   }
                                 } catch (e) {
                                   if (context.mounted) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          e.toString(),
-                                        ),
-                                      ),
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(e.toString())),
                                     );
                                   }
                                 }
                               },
                               child: const Text(
                                 'Sign In with Google',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
+                                style: TextStyle(fontSize: 16),
                               ),
                             ),
                           ),
