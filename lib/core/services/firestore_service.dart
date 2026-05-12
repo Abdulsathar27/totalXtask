@@ -18,4 +18,28 @@ class FirestoreService {
       rethrow;
     }
   }
+
+  Future<List<UserModel>> fetchUsers() async {
+    try {
+      final QuerySnapshot querySnapshot =
+          await usersCollection
+              .orderBy(
+                'createdAt',
+                descending: true,
+              )
+              .get();
+
+      final List<UserModel> users =
+          querySnapshot.docs.map((doc) {
+        return UserModel.fromMap(
+          doc.data() as Map<String, dynamic>,
+          doc.id,
+        );
+      }).toList();
+
+      return users;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
