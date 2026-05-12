@@ -4,27 +4,52 @@ import 'package:totalxtask/controller/user_controller.dart';
 import 'package:totalxtask/views/add_users/add_user_screen.dart';
 
 
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Users',
-        ),
-      ),
-      body: Consumer<UserController>(
-        builder: (context, userProvider, child) {
-          if (userProvider.isLoading &&
-              userProvider.filteredUsers.isEmpty) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+    return Consumer<UserController>(
+      builder: (context, userProvider, child) {
+        if (userProvider.filteredUsers.isEmpty &&
+            !userProvider.isPaginationLoading) {
+          Future.microtask(() async {
+            userProvider.resetPagination();
 
-          return Column(
+            await userProvider
+                .fetchPaginatedUsers();
+          });
+        }
+
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Users',
+            ),
+            actions: [
+              PopupMenuButton<SortType>(
+                onSelected: (SortType value) {
+                  userProvider.sortUsers(value);
+                },
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                    value: SortType.ageAscending,
+                    child: Text(
+                      'Age Ascending',
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: SortType.ageDescending,
+                    child: Text(
+                      'Age Descending',
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          body: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.all(16),
@@ -51,83 +76,126 @@ class HomeScreen extends StatelessWidget {
 
               Expanded(
                 child:
-                    userProvider.filteredUsers.isEmpty
+                    userProvider.filteredUsers.isEmpty &&
+                            userProvider
+                                .isPaginationLoading
                         ? const Center(
-                            child: Text(
-                              'No Users Found',
-                            ),
+                            child:
+                                CircularProgressIndicator(),
                           )
-                        : ListView.builder(
-                            padding:
-                                const EdgeInsets.symmetric(
-                              horizontal: 16,
-                            ),
-                            itemCount: userProvider
-                                .filteredUsers.length,
-                            itemBuilder:
-                                (context, index) {
-                              final user = userProvider
-                                  .filteredUsers[index];
+                        : NotificationListener<
+                            ScrollNotification>(
+                            onNotification:
+                                (scrollInfo) {
+                              if (scrollInfo
+                                      .metrics.pixels >=
+                                  scrollInfo
+                                          .metrics
+                                          .maxScrollExtent -
+                                      200) {
+                                userProvider
+                                    .fetchPaginatedUsers();
+                              }
 
-                              return Card(
-                                margin:
-                                    const EdgeInsets.only(
-                                  bottom: 16,
-                                ),
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage:
-                                        NetworkImage(
-                                      user.imageUrl,
+                              return false;
+                            },
+                            child: ListView.builder(
+                              padding:
+                                  const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              itemCount: userProvider
+                                      .filteredUsers
+                                      .length +
+                                  (userProvider
+                                          .isPaginationLoading
+                                      ? 1
+                                      : 0),
+                              itemBuilder:
+                                  (context, index) {
+                                if (index ==
+                                    userProvider
+                                        .filteredUsers
+                                        .length) {
+                                  return const Padding(
+                                    padding:
+                                        EdgeInsets.all(
+                                      16,
+                                    ),
+                                    child: Center(
+                                      child:
+                                          CircularProgressIndicator(),
+                                    ),
+                                  );
+                                }
+
+                                final user =
+                                    userProvider
+                                            .filteredUsers[
+                                        index];
+
+                                return Card(
+                                  margin:
+                                      const EdgeInsets.only(
+                                    bottom: 16,
+                                  ),
+                                  child: ListTile(
+                                    leading:
+                                        CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage:
+                                          NetworkImage(
+                                        user.imageUrl,
+                                      ),
+                                    ),
+                                    title: Text(
+                                      user.name,
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment
+                                              .start,
+                                      children: [
+                                        Text(
+                                          user.phone,
+                                        ),
+                                        Text(
+                                          'Age: ${user.age}',
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  title: Text(
-                                    user.name,
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment
-                                            .start,
-                                    children: [
-                                      Text(
-                                        user.phone,
-                                      ),
-                                      Text(
-                                        'Age: ${user.age}',
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
               ),
             ],
-          );
-        },
-      ),
-      floatingActionButton:
-          FloatingActionButton(
-        onPressed: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) =>
-                  const AddUserScreen(),
-            ),
-          );
+          ),
+          floatingActionButton:
+              FloatingActionButton(
+            onPressed: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>
+                      const AddUserScreen(),
+                ),
+              );
 
-          if (context.mounted) {
-            await context
-                .read<UserController>()
-                .fetchUsers();
-          }
-        },
-        child: const Icon(
-          Icons.add,
-        ),
-      ),
+              if (context.mounted) {
+                userProvider.resetPagination();
+
+                await userProvider
+                    .fetchPaginatedUsers();
+              }
+            },
+            child: const Icon(
+              Icons.add,
+            ),
+          ),
+        );
+      },
     );
   }
 }
