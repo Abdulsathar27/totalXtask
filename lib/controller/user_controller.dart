@@ -28,6 +28,9 @@ class UserController extends ChangeNotifier {
   final TextEditingController ageController =
       TextEditingController();
 
+  final TextEditingController searchController =
+      TextEditingController();
+
   final GlobalKey<FormState> formKey =
       GlobalKey<FormState>();
 
@@ -37,11 +40,16 @@ class UserController extends ChangeNotifier {
 
   List<UserModel> _users = [];
 
+  List<UserModel> _filteredUsers = [];
+
   bool get isLoading => _isLoading;
 
   File? get selectedImage => _selectedImage;
 
   List<UserModel> get users => _users;
+
+  List<UserModel> get filteredUsers =>
+      _filteredUsers;
 
   Future<void> pickImage() async {
     try {
@@ -112,6 +120,8 @@ class UserController extends ChangeNotifier {
 
       _users =
           await _firestoreService.fetchUsers();
+
+      _filteredUsers = _users;
     } catch (e) {
       rethrow;
     } finally {
@@ -119,6 +129,28 @@ class UserController extends ChangeNotifier {
 
       notifyListeners();
     }
+  }
+
+  void searchUsers(String query) {
+    if (query.trim().isEmpty) {
+      _filteredUsers = _users;
+    } else {
+      _filteredUsers = _users.where((user) {
+        final String name =
+            user.name.toLowerCase();
+
+        final String phone =
+            user.phone.toLowerCase();
+
+        final String searchQuery =
+            query.toLowerCase();
+
+        return name.contains(searchQuery) ||
+            phone.contains(searchQuery);
+      }).toList();
+    }
+
+    notifyListeners();
   }
 
   void clearFields() {
@@ -136,6 +168,7 @@ class UserController extends ChangeNotifier {
     nameController.dispose();
     phoneController.dispose();
     ageController.dispose();
+    searchController.dispose();
 
     super.dispose();
   }
