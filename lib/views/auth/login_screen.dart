@@ -11,7 +11,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Consumer<Authcontroller>(
+        child: Consumer<AuthController>(
           builder: (context, authProvider, child) {
             return Center(
               child: Padding(

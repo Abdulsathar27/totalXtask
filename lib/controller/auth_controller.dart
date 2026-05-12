@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../core/services/auth_service.dart';
 
-class Authcontroller extends ChangeNotifier {
+class AuthController extends ChangeNotifier {
   final AuthService authService = AuthService();
 
   bool _isLoading = false;
@@ -16,7 +16,7 @@ class Authcontroller extends ChangeNotifier {
 
   bool get isLoggedIn => _user != null;
 
-  Authcontroller() {
+  AuthController() {
     _user = authService.currentUser;
   }
 
