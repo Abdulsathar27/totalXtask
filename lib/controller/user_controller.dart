@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -36,9 +35,13 @@ class UserController extends ChangeNotifier {
 
   File? _selectedImage;
 
+  List<UserModel> _users = [];
+
   bool get isLoading => _isLoading;
 
   File? get selectedImage => _selectedImage;
+
+  List<UserModel> get users => _users;
 
   Future<void> pickImage() async {
     try {
@@ -89,7 +92,26 @@ class UserController extends ChangeNotifier {
 
       await _firestoreService.addUser(user);
 
+      await fetchUsers();
+
       clearFields();
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchUsers() async {
+    try {
+      _isLoading = true;
+
+      notifyListeners();
+
+      _users =
+          await _firestoreService.fetchUsers();
     } catch (e) {
       rethrow;
     } finally {
