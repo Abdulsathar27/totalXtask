@@ -9,6 +9,11 @@ import '../core/services/firestore_service.dart';
 import '../core/services/storage_service.dart';
 import '../data/models/user_model.dart';
 
+enum SortType {
+  ageAscending,
+  ageDescending,
+}
+
 class UserController extends ChangeNotifier {
   final StorageService _storageService = StorageService();
 
@@ -42,6 +47,8 @@ class UserController extends ChangeNotifier {
 
   List<UserModel> _filteredUsers = [];
 
+  SortType _sortType = SortType.ageAscending;
+
   bool get isLoading => _isLoading;
 
   File? get selectedImage => _selectedImage;
@@ -50,6 +57,8 @@ class UserController extends ChangeNotifier {
 
   List<UserModel> get filteredUsers =>
       _filteredUsers;
+
+  SortType get sortType => _sortType;
 
   Future<void> pickImage() async {
     try {
@@ -121,7 +130,9 @@ class UserController extends ChangeNotifier {
       _users =
           await _firestoreService.fetchUsers();
 
-      _filteredUsers = _users;
+      _filteredUsers = List.from(_users);
+
+      sortUsers(_sortType);
     } catch (e) {
       rethrow;
     } finally {
@@ -133,7 +144,7 @@ class UserController extends ChangeNotifier {
 
   void searchUsers(String query) {
     if (query.trim().isEmpty) {
-      _filteredUsers = _users;
+      _filteredUsers = List.from(_users);
     } else {
       _filteredUsers = _users.where((user) {
         final String name =
@@ -148,6 +159,22 @@ class UserController extends ChangeNotifier {
         return name.contains(searchQuery) ||
             phone.contains(searchQuery);
       }).toList();
+    }
+
+    sortUsers(_sortType);
+  }
+
+  void sortUsers(SortType type) {
+    _sortType = type;
+
+    if (type == SortType.ageAscending) {
+      _filteredUsers.sort(
+        (a, b) => a.age.compareTo(b.age),
+      );
+    } else {
+      _filteredUsers.sort(
+        (a, b) => b.age.compareTo(a.age),
+      );
     }
 
     notifyListeners();
