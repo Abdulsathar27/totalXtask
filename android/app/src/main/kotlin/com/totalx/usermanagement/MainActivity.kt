@@ -1,4 +1,4 @@
-package com.abdulsathar.totalxtask
+package com.totalx.usermanagement
 
 import io.flutter.embedding.android.FlutterActivity
 
