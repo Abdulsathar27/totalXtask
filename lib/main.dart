@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:totalxtask/controller/auth_controller.dart';
 import 'firebase_options.dart';
+import 'views/auth/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,12 +20,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(
-          child: Text('Firebase Connected'),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => Authcontroller(),
         ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: const LoginScreen(),
       ),
     );
   }
