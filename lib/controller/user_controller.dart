@@ -41,7 +41,13 @@ class UserController extends ChangeNotifier {
 
   bool _isLoading = false;
 
+  bool _isPaginationLoading = false;
+
+  bool _hasMore = true;
+
   File? _selectedImage;
+
+  DocumentSnapshot? _lastDocument;
 
   List<UserModel> _users = [];
 
@@ -50,6 +56,11 @@ class UserController extends ChangeNotifier {
   SortType _sortType = SortType.ageAscending;
 
   bool get isLoading => _isLoading;
+
+  bool get isPaginationLoading =>
+      _isPaginationLoading;
+
+  bool get hasMore => _hasMore;
 
   File? get selectedImage => _selectedImage;
 
@@ -109,7 +120,9 @@ class UserController extends ChangeNotifier {
 
       await _firestoreService.addUser(user);
 
-      await fetchUsers();
+      resetPagination();
+
+      await fetchPaginatedUsers();
 
       clearFields();
     } catch (e) {
@@ -137,6 +150,53 @@ class UserController extends ChangeNotifier {
       rethrow;
     } finally {
       _isLoading = false;
+
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchPaginatedUsers() async {
+    if (_isPaginationLoading || !_hasMore) {
+      return;
+    }
+
+    try {
+      _isPaginationLoading = true;
+
+      notifyListeners();
+
+      final QuerySnapshot querySnapshot =
+          await _firestoreService
+              .fetchPaginatedUsers(
+        lastDocument: _lastDocument,
+      );
+
+      if (querySnapshot.docs.isNotEmpty) {
+        _lastDocument =
+            querySnapshot.docs.last;
+      }
+
+      final List<UserModel> newUsers =
+          querySnapshot.docs.map((doc) {
+        return UserModel.fromMap(
+          doc.data() as Map<String, dynamic>,
+          doc.id,
+        );
+      }).toList();
+
+      if (newUsers.length < 10) {
+        _hasMore = false;
+      }
+
+      _users.addAll(newUsers);
+
+      _filteredUsers = List.from(_users);
+
+      sortUsers(_sortType);
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isPaginationLoading = false;
 
       notifyListeners();
     }
@@ -176,6 +236,18 @@ class UserController extends ChangeNotifier {
         (a, b) => b.age.compareTo(a.age),
       );
     }
+
+    notifyListeners();
+  }
+
+  void resetPagination() {
+    _users.clear();
+
+    _filteredUsers.clear();
+
+    _lastDocument = null;
+
+    _hasMore = true;
 
     notifyListeners();
   }
