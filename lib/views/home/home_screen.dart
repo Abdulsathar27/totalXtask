@@ -8,6 +8,7 @@ import 'package:totalxtask/views/add_users/add_user_screen.dart';
 import 'package:totalxtask/views/auth/login_screen.dart';
 import 'package:totalxtask/widgets/custom_search_bar.dart';
 import 'package:totalxtask/widgets/empty_widget.dart';
+import 'package:totalxtask/widgets/sort_bottom_sheet.dart';
 import 'package:totalxtask/widgets/user_card.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -243,42 +244,21 @@ class HomeScreen extends StatelessWidget {
                             width: 10,
                           ),
 
-                          PopupMenuButton<
-                              SortType>(
-                            onSelected:
-                                (
-                                  SortType
-                                      value,
-                                ) {
-                              userProvider
-                                  .sortUsers(
-                                value,
+                          GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context:
+                                    context,
+
+                                backgroundColor:
+                                    Colors
+                                        .transparent,
+
+                                builder: (_) {
+                                  return const SortBottomSheet();
+                                },
                               );
                             },
-
-                            itemBuilder:
-                                (
-                                  context,
-                                ) =>
-                                    [
-                              const PopupMenuItem(
-                                value: SortType
-                                    .ageAscending,
-
-                                child: Text(
-                                  'Age Ascending',
-                                ),
-                              ),
-
-                              const PopupMenuItem(
-                                value: SortType
-                                    .ageDescending,
-
-                                child: Text(
-                                  'Age Descending',
-                                ),
-                              ),
-                            ],
 
                             child:
                                 Container(

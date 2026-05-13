@@ -88,51 +88,64 @@ class UserController extends ChangeNotifier {
     }
   }
 
-  Future<void> addUser() async {
+
+
+Future<void> addUser() async {
+  try {
     if (!formKey.currentState!.validate()) {
       return;
     }
 
-    if (_selectedImage == null) {
-      throw Exception('Please select an image');
-    }
+    _isLoading = true;
 
-    try {
-      _isLoading = true;
+    notifyListeners();
 
-      notifyListeners();
+    String imageUrl = '';
 
-      final String imageUrl =
-          await _storageService.uploadUserImage(
+     if (_selectedImage != null) {
+      imageUrl = await _storageService
+          .uploadUserImage(
         _selectedImage!,
       );
-
-      final String userId = _uuid.v4();
-
-      final UserModel user = UserModel(
-        id: userId,
-        name: nameController.text.trim(),
-        phone: phoneController.text.trim(),
-        age: int.parse(ageController.text.trim()),
-        imageUrl: imageUrl,
-        createdAt: Timestamp.now(),
-      );
-
-      await _firestoreService.addUser(user);
-
-      resetPagination();
-
-      await fetchPaginatedUsers();
-
-      clearFields();
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-
-      notifyListeners();
     }
+
+    final user = UserModel(
+      id: '',
+
+      name: nameController.text.trim(),
+
+      phone: phoneController.text.trim(),
+
+      age: int.parse(
+        ageController.text.trim(),
+      ),
+
+      imageUrl: imageUrl,
+
+      createdAt: Timestamp.now(),
+    );
+
+    await _firestoreService.addUser(
+      user,
+    );
+
+    nameController.clear();
+
+    phoneController.clear();
+
+    ageController.clear();
+
+    _selectedImage = null;
+
+    notifyListeners();
+  } catch (e) {
+    rethrow;
+  } finally {
+    _isLoading = false;
+
+    notifyListeners();
   }
+}
 
   Future<void> fetchUsers() async {
     try {
