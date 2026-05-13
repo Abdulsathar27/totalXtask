@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:totalxtask/controller/auth_controller.dart';
 import 'package:totalxtask/controller/user_controller.dart';
 import 'package:totalxtask/views/add_users/add_user_screen.dart';
+
+
 import '../auth/login_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -116,90 +118,103 @@ class HomeScreen extends StatelessWidget {
                             child:
                                 CircularProgressIndicator(),
                           )
-                        : NotificationListener<
-                            ScrollNotification>(
-                            onNotification:
-                                (scrollInfo) {
-                              if (scrollInfo
-                                      .metrics.pixels >=
-                                  scrollInfo
-                                          .metrics
-                                          .maxScrollExtent -
-                                      200) {
-                                userProvider
-                                    .fetchPaginatedUsers();
-                              }
+                        : RefreshIndicator(
+                            onRefresh: () async {
+                              userProvider
+                                  .resetPagination();
 
-                              return false;
+                              await userProvider
+                                  .fetchPaginatedUsers();
                             },
-                            child: ListView.builder(
-                              padding:
-                                  const EdgeInsets.symmetric(
-                                horizontal: 16,
-                              ),
-                              itemCount: userProvider
-                                      .filteredUsers
-                                      .length +
-                                  (userProvider
-                                          .isPaginationLoading
-                                      ? 1
-                                      : 0),
-                              itemBuilder:
-                                  (context, index) {
-                                if (index ==
-                                    userProvider
-                                        .filteredUsers
-                                        .length) {
-                                  return const Padding(
-                                    padding:
-                                        EdgeInsets.all(
-                                      16,
-                                    ),
-                                    child: Center(
-                                      child:
-                                          CircularProgressIndicator(),
-                                    ),
-                                  );
+                            child:
+                                NotificationListener<
+                                    ScrollNotification>(
+                              onNotification:
+                                  (scrollInfo) {
+                                if (scrollInfo
+                                        .metrics
+                                        .pixels >=
+                                    scrollInfo
+                                            .metrics
+                                            .maxScrollExtent -
+                                        200) {
+                                  userProvider
+                                      .fetchPaginatedUsers();
                                 }
 
-                                final user =
-                                    userProvider
-                                            .filteredUsers[
-                                        index];
+                                return false;
+                              },
+                              child: ListView.builder(
+                                physics:
+                                    const AlwaysScrollableScrollPhysics(),
+                                padding:
+                                    const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                itemCount: userProvider
+                                        .filteredUsers
+                                        .length +
+                                    (userProvider
+                                            .isPaginationLoading
+                                        ? 1
+                                        : 0),
+                                itemBuilder:
+                                    (context, index) {
+                                  if (index ==
+                                      userProvider
+                                          .filteredUsers
+                                          .length) {
+                                    return const Padding(
+                                      padding:
+                                          EdgeInsets.all(
+                                        16,
+                                      ),
+                                      child: Center(
+                                        child:
+                                            CircularProgressIndicator(),
+                                      ),
+                                    );
+                                  }
 
-                                return Card(
-                                  margin:
-                                      const EdgeInsets.only(
-                                    bottom: 16,
-                                  ),
-                                  child: ListTile(
-                                    leading:
-                                        CircleAvatar(
-                                      radius: 30,
-                                      backgroundImage:
-                                          NetworkImage(
-                                        user.imageUrl,
+                                  final user =
+                                      userProvider
+                                              .filteredUsers[
+                                          index];
+
+                                  return Card(
+                                    margin:
+                                        const EdgeInsets.only(
+                                      bottom: 16,
+                                    ),
+                                    child: ListTile(
+                                      leading:
+                                          CircleAvatar(
+                                        radius: 30,
+                                        backgroundImage:
+                                            NetworkImage(
+                                          user.imageUrl,
+                                        ),
+                                      ),
+                                      title: Text(
+                                        user.name,
+                                      ),
+                                      subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment
+                                                .start,
+                                        children: [
+                                          Text(
+                                            user.phone,
+                                          ),
+                                          Text(
+                                            'Age: ${user.age}',
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    title: Text(
-                                      user.name,
-                                    ),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                      children: [
-                                        Text(
-                                          user.phone,
-                                        ),
-                                        Text(
-                                          'Age: ${user.age}',
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
                           ),
               ),
