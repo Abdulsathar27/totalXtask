@@ -27,127 +27,260 @@ class HomeScreen extends StatelessWidget {
         }
 
         return Scaffold(
-          backgroundColor: const Color(0xFFEEEEEE),
+          backgroundColor: const Color(0xFFF1F1F1),
 
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: AppColors.black,
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.endFloat,
+
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(
+              bottom: 30,
+              right: 8,
             ),
-            onPressed: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const AddUserScreen(),
-                ),
-              );
-              if (context.mounted) {
-                userProvider.resetPagination();
-                await userProvider.fetchPaginatedUsers();
-              }
-            },
-            child: const Icon(Icons.add, color: AppColors.scaffoldBackground),
+            child: FloatingActionButton(
+              backgroundColor: AppColors.black,
+
+              elevation: 4,
+
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100),
+              ),
+
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        const AddUserScreen(),
+                  ),
+                );
+
+                if (context.mounted) {
+                  userProvider.resetPagination();
+
+                  await userProvider
+                      .fetchPaginatedUsers();
+                }
+              },
+
+              child: const Icon(
+                Icons.add,
+                size: 34,
+                color:
+                    AppColors.scaffoldBackground,
+              ),
+            ),
           ),
 
           body: SafeArea(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
               children: [
-                // Header: location row
                 Container(
-                  color: AppColors.black,
-                  padding: const EdgeInsets.only(
-                    left: AppSpacing.screenPadding,
-                    right: AppSpacing.screenPadding,
-                    top: 16,
-                    bottom: 24,
+                  width: double.infinity,
+
+                  padding:
+                      const EdgeInsets.only(
+                    left:
+                        AppSpacing.screenPadding,
+                    right:
+                        AppSpacing.screenPadding,
+                    top: 14,
+                    bottom: 18,
                   ),
+
+                  decoration:
+                      const BoxDecoration(
+                    color: AppColors.black,
+                  ),
+
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment:
+                        CrossAxisAlignment
+                            .start,
                     children: [
-                      // Location row
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment:
+                            MainAxisAlignment
+                                .spaceBetween,
                         children: [
                           Row(
                             children: const [
-                              Icon(Icons.location_on, color: AppColors.scaffoldBackground, size: 20),
+                              Icon(
+                                Icons.location_on,
+                                color: AppColors
+                                    .scaffoldBackground,
+                                size: 18,
+                              ),
+
                               SizedBox(width: 4),
+
                               Text(
                                 'Nilambur',
+
                                 style: TextStyle(
-                                  color: AppColors.scaffoldBackground,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
+                                  color: AppColors
+                                      .scaffoldBackground,
+
+                                  fontSize: 16,
+
+                                  fontWeight:
+                                      FontWeight
+                                          .w500,
                                 ),
                               ),
                             ],
                           ),
+
                           IconButton(
-                            onPressed: () async {
+                            onPressed:
+                                () async {
                               try {
-                                await context.read<AuthController>().signOut();
-                                if (context.mounted) {
+                                await context
+                                    .read<
+                                        AuthController>()
+                                    .signOut();
+
+                                if (context
+                                    .mounted) {
                                   Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => const LoginScreen(),
+                                      builder:
+                                          (_) =>
+                                              const LoginScreen(),
                                     ),
-                                    (route) => false,
+                                    (
+                                      route,
+                                    ) =>
+                                        false,
                                   );
                                 }
                               } catch (e) {
-                                SnackbarHelper.showErrorSnackBar(
-                                  context: context,
-                                  message: 'Logout failed',
+                                SnackbarHelper
+                                    .showErrorSnackBar(
+                                  context:
+                                      context,
+                                  message:
+                                      'Logout failed',
                                 );
                               }
                             },
-                            icon: const Icon(Icons.logout, color: AppColors.scaffoldBackground),
+
+                            icon:
+                                const Icon(
+                              Icons.logout,
+
+                              color: AppColors
+                                  .scaffoldBackground,
+
+                              size: 26,
+                            ),
                           ),
                         ],
                       ),
 
-                      const SizedBox(height: 16),
+                      const SizedBox(
+                        height: 14,
+                      ),
 
-                      // Search + filter row
                       Row(
                         children: [
                           Expanded(
-                            child: CustomSearchBar(
-                              controller: userProvider.searchController,
-                              onChanged: (value) {
-                                userProvider.searchUsers(value);
+                            child:
+                                CustomSearchBar(
+                              controller:
+                                  userProvider
+                                      .searchController,
+
+                              onChanged:
+                                  (
+                                    value,
+                                  ) {
+                                userProvider
+                                    .searchUsers(
+                                  value,
+                                );
                               },
                             ),
                           ),
-                          const SizedBox(width: AppSpacing.mediumSpacing),
-                          PopupMenuButton<SortType>(
-                            onSelected: (SortType value) {
-                              userProvider.sortUsers(value);
+
+                          const SizedBox(
+                            width: 12,
+                          ),
+
+                          PopupMenuButton<
+                              SortType>(
+                            onSelected:
+                                (
+                                  SortType
+                                      value,
+                                ) {
+                              userProvider
+                                  .sortUsers(
+                                value,
+                              );
                             },
-                            itemBuilder: (context) => [
+
+                            itemBuilder:
+                                (
+                                  context,
+                                ) =>
+                                    [
                               const PopupMenuItem(
-                                value: SortType.ageAscending,
-                                child: Text('Age Ascending'),
-                              ),
-                              const PopupMenuItem(
-                                value: SortType.ageDescending,
-                                child: Text('Age Descending'),
-                              ),
-                            ],
-                            child: Container(
-                              width: 58,
-                              height: 58,
-                              decoration: BoxDecoration(
-                                color: AppColors.black,
-                                border: Border.all(color:AppColors.hintGrey ),
-                                borderRadius: BorderRadius.circular(
-                                  AppSpacing.inputRadius,
+                                value: SortType
+                                    .ageAscending,
+
+                                child: Text(
+                                  'Age Ascending',
                                 ),
                               ),
-                              child: const Icon(Icons.tune, color: AppColors.scaffoldBackground),
+
+                              const PopupMenuItem(
+                                value: SortType
+                                    .ageDescending,
+
+                                child: Text(
+                                  'Age Descending',
+                                ),
+                              ),
+                            ],
+
+                            child:
+                                Container(
+                              width: 50,
+                              height: 50,
+
+                              decoration:
+                                  BoxDecoration(
+                                color:
+                                    AppColors
+                                        .black,
+
+                                border:
+                                    Border.all(
+                                  color:
+                                      AppColors
+                                          .hintGrey,
+                                ),
+
+                                borderRadius:
+                                    BorderRadius.circular(
+                                  18,
+                                ),
+                              ),
+
+                              child:
+                                  const Icon(
+                                Icons.tune,
+
+                                size: 24,
+
+                                color:
+                                    AppColors
+                                        .white,
+                              ),
                             ),
                           ),
                         ],
@@ -156,78 +289,144 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(
+                  height: 18,
+                ),
 
-                // "Users Lists" label
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.screenPadding,
+                const Padding(
+                  padding:
+                      EdgeInsets.symmetric(
+                    horizontal:
+                        AppSpacing.screenPadding,
                   ),
-                  child: const Text(
+
+                  child: Text(
                     'Users Lists',
+
                     style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.cardShadow,
+                      fontSize: 18,
+
+                      fontWeight:
+                          FontWeight.w700,
+
+                      color:
+                          Color(0xFF555555),
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(
+                  height: 14,
+                ),
 
-                // List area
                 Expanded(
-                  child: userProvider.filteredUsers.isEmpty &&
-                          userProvider.isPaginationLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : RefreshIndicator(
-                          onRefresh: () async {
-                            userProvider.resetPagination();
-                            await userProvider.fetchPaginatedUsers();
-                          },
-                          child: NotificationListener<ScrollNotification>(
-                            onNotification: (scrollInfo) {
-                              if (scrollInfo.metrics.pixels >=
-                                  scrollInfo.metrics.maxScrollExtent - 200) {
-                                userProvider.fetchPaginatedUsers();
-                              }
-                              return false;
-                            },
-                            child: userProvider.filteredUsers.isEmpty
-                                ? const EmptyStateWidget(
-                                    icon: Icons.people_outline,
-                                    title: 'No Users Found',
-                                    subtitle:
-                                        'Add your first user to get started',
-                                  )
-                                : ListView.builder(
-                                    physics:
-                                        const AlwaysScrollableScrollPhysics(),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: AppSpacing.screenPadding,
-                                    ),
-                                    itemCount:
-                                        userProvider.filteredUsers.length +
-                                            (userProvider.isPaginationLoading
-                                                ? 1
-                                                : 0),
-                                    itemBuilder: (context, index) {
-                                      if (index ==
-                                          userProvider.filteredUsers.length) {
-                                        return const Padding(
-                                          padding: EdgeInsets.all(16),
-                                          child: Center(
-                                            child: CircularProgressIndicator(),
+                  child:
+                      userProvider
+                                  .filteredUsers
+                                  .isEmpty &&
+                              userProvider
+                                  .isPaginationLoading
+                          ? const Center(
+                              child:
+                                  CircularProgressIndicator(),
+                            )
+                          : RefreshIndicator(
+                              onRefresh:
+                                  () async {
+                                userProvider
+                                    .resetPagination();
+
+                                await userProvider
+                                    .fetchPaginatedUsers();
+                              },
+
+                              child:
+                                  NotificationListener<
+                                      ScrollNotification>(
+                                onNotification:
+                                    (
+                                      scrollInfo,
+                                    ) {
+                                  if (scrollInfo
+                                          .metrics
+                                          .pixels >=
+                                      scrollInfo
+                                              .metrics
+                                              .maxScrollExtent -
+                                          200) {
+                                    userProvider
+                                        .fetchPaginatedUsers();
+                                  }
+
+                                  return false;
+                                },
+
+                                child:
+                                    userProvider
+                                            .filteredUsers
+                                            .isEmpty
+                                        ? const EmptyStateWidget(
+                                            icon:
+                                                Icons.people_outline,
+
+                                            title:
+                                                'No Users Found',
+
+                                            subtitle:
+                                                'Add your first user to get started',
+                                          )
+                                        : ListView.builder(
+                                            physics:
+                                                const AlwaysScrollableScrollPhysics(),
+
+                                            padding:
+                                                const EdgeInsets.symmetric(
+                                              horizontal:
+                                                  AppSpacing.screenPadding,
+                                            ),
+
+                                            itemCount:
+                                                userProvider.filteredUsers.length +
+                                                    (userProvider.isPaginationLoading
+                                                        ? 1
+                                                        : 0),
+
+                                            itemBuilder:
+                                                (
+                                                  context,
+                                                  index,
+                                                ) {
+                                              if (index ==
+                                                  userProvider
+                                                      .filteredUsers
+                                                      .length) {
+                                                return const Padding(
+                                                  padding:
+                                                      EdgeInsets.all(
+                                                    16,
+                                                  ),
+
+                                                  child:
+                                                      Center(
+                                                    child:
+                                                        CircularProgressIndicator(),
+                                                  ),
+                                                );
+                                              }
+
+                                              final user =
+                                                  userProvider
+                                                          .filteredUsers[
+                                                      index];
+
+                                              return UserCard(
+                                                user:
+                                                    user,
+                                              );
+                                            },
                                           ),
-                                        );
-                                      }
-                                      final user =
-                                          userProvider.filteredUsers[index];
-                                      return UserCard(user: user);
-                                    },
-                                  ),
-                          ),
-                        ),
+                              ),
+                            ),
                 ),
               ],
             ),

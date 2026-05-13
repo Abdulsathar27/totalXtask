@@ -18,7 +18,7 @@ class CustomSearchBar
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 58,
+      height: 50,
 
       decoration: BoxDecoration(
         color: AppColors.white,
