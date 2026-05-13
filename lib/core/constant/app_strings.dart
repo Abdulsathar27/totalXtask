@@ -16,30 +16,25 @@ class AppStrings {
 
   static const String somethingWentWrong = 'Something went wrong';
 
-  static const String welcomeBack =
-    'Welcome Back';
+  static const String welcomeBack = 'Welcome Back';
 
-static const String loginSubtitle =
-    'Manage your users easily with TotalX';
+  static const String loginSubtitle = 'Manage your users easily with TotalX';
 
-static const String googleSignInFailed =
-    'Google sign-in failed';
+  static const String googleSignInFailed = 'Google sign-in failed';
 
-static const String totalXLogo =
-    'assets/images/totalx.png';
+  static const String totalXLogo = 'assets/images/totalx.png';
 
-    static const String locationName =
-    'Nilambur';
+  static const String locationName = 'Nilambur';
 
-static const String usersList =
-    'Users Lists';
+  static const String usersList = 'Users Lists';
 
-static const String logoutFailed =
-    'Logout failed';
+  static const String logoutFailed = 'Logout failed';
 
-static const String noUsersFound =
-    'No Users Found';
+  static const String noUsersFound = 'No Users Found';
 
-static const String emptyUsersSubtitle =
-    'Add your first user to get started';
+  static const String emptyUsersSubtitle = 'Add your first user to get started';
+
+  static const String appName = 'TotalX User Management';
+
+  static const String splashSubtitle = 'Manage Users Easily';
 }

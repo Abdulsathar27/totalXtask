@@ -8,35 +8,24 @@ import '../core/services/firestore_service.dart';
 import '../core/services/storage_service.dart';
 import '../data/models/user_model.dart';
 
-enum SortType {
-  ageAscending,
-  ageDescending,
-}
+enum SortType { ageAscending, ageDescending }
 
 class UserController extends ChangeNotifier {
   final StorageService _storageService = StorageService();
 
-  final FirestoreService _firestoreService =
-      FirestoreService();
+  final FirestoreService _firestoreService = FirestoreService();
 
   final ImagePicker _imagePicker = ImagePicker();
 
-  
+  final TextEditingController nameController = TextEditingController();
 
-  final TextEditingController nameController =
-      TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
 
-  final TextEditingController phoneController =
-      TextEditingController();
+  final TextEditingController ageController = TextEditingController();
 
-  final TextEditingController ageController =
-      TextEditingController();
+  final TextEditingController searchController = TextEditingController();
 
-  final TextEditingController searchController =
-      TextEditingController();
-
-  final GlobalKey<FormState> formKey =
-      GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   bool _isLoading = false;
 
@@ -56,8 +45,7 @@ class UserController extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  bool get isPaginationLoading =>
-      _isPaginationLoading;
+  bool get isPaginationLoading => _isPaginationLoading;
 
   bool get hasMore => _hasMore;
 
@@ -65,15 +53,13 @@ class UserController extends ChangeNotifier {
 
   List<UserModel> get users => _users;
 
-  List<UserModel> get filteredUsers =>
-      _filteredUsers;
+  List<UserModel> get filteredUsers => _filteredUsers;
 
   SortType get sortType => _sortType;
 
   Future<void> pickImage() async {
     try {
-      final XFile? pickedFile =
-          await _imagePicker.pickImage(
+      final XFile? pickedFile = await _imagePicker.pickImage(
         source: ImageSource.gallery,
       );
 
@@ -86,13 +72,10 @@ class UserController extends ChangeNotifier {
       rethrow;
     }
   }
-
-
-
-Future<void> addUser() async {
+  Future<bool> addUser() async {
   try {
     if (!formKey.currentState!.validate()) {
-      return;
+      return false;
     }
 
     _isLoading = true;
@@ -101,7 +84,7 @@ Future<void> addUser() async {
 
     String imageUrl = '';
 
-     if (_selectedImage != null) {
+    if (_selectedImage != null) {
       imageUrl = await _storageService
           .uploadUserImage(
         _selectedImage!,
@@ -137,8 +120,10 @@ Future<void> addUser() async {
     _selectedImage = null;
 
     notifyListeners();
+
+    return true;
   } catch (e) {
-    rethrow;
+    return false;
   } finally {
     _isLoading = false;
 
@@ -152,8 +137,7 @@ Future<void> addUser() async {
 
       notifyListeners();
 
-      _users =
-          await _firestoreService.fetchUsers();
+      _users = await _firestoreService.fetchUsers();
 
       _filteredUsers = List.from(_users);
 
@@ -177,23 +161,15 @@ Future<void> addUser() async {
 
       notifyListeners();
 
-      final QuerySnapshot querySnapshot =
-          await _firestoreService
-              .fetchPaginatedUsers(
-        lastDocument: _lastDocument,
-      );
+      final QuerySnapshot querySnapshot = await _firestoreService
+          .fetchPaginatedUsers(lastDocument: _lastDocument);
 
       if (querySnapshot.docs.isNotEmpty) {
-        _lastDocument =
-            querySnapshot.docs.last;
+        _lastDocument = querySnapshot.docs.last;
       }
 
-      final List<UserModel> newUsers =
-          querySnapshot.docs.map((doc) {
-        return UserModel.fromMap(
-          doc.data() as Map<String, dynamic>,
-          doc.id,
-        );
+      final List<UserModel> newUsers = querySnapshot.docs.map((doc) {
+        return UserModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
       }).toList();
 
       if (newUsers.length < 10) {
@@ -219,17 +195,13 @@ Future<void> addUser() async {
       _filteredUsers = List.from(_users);
     } else {
       _filteredUsers = _users.where((user) {
-        final String name =
-            user.name.toLowerCase();
+        final String name = user.name.toLowerCase();
 
-        final String phone =
-            user.phone.toLowerCase();
+        final String phone = user.phone.toLowerCase();
 
-        final String searchQuery =
-            query.toLowerCase();
+        final String searchQuery = query.toLowerCase();
 
-        return name.contains(searchQuery) ||
-            phone.contains(searchQuery);
+        return name.contains(searchQuery) || phone.contains(searchQuery);
       }).toList();
     }
 
@@ -240,13 +212,9 @@ Future<void> addUser() async {
     _sortType = type;
 
     if (type == SortType.ageAscending) {
-      _filteredUsers.sort(
-        (a, b) => a.age.compareTo(b.age),
-      );
+      _filteredUsers.sort((a, b) => a.age.compareTo(b.age));
     } else {
-      _filteredUsers.sort(
-        (a, b) => b.age.compareTo(a.age),
-      );
+      _filteredUsers.sort((a, b) => b.age.compareTo(a.age));
     }
 
     notifyListeners();

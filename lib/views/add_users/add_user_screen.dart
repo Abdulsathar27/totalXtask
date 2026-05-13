@@ -17,12 +17,10 @@ class AddUserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          const Color(0xFFF2F2F2),
+      backgroundColor: const Color(0xFFF2F2F2),
 
       appBar: AppBar(
-        backgroundColor:
-            Colors.transparent,
+        backgroundColor: Colors.transparent,
 
         elevation: 0,
 
@@ -43,27 +41,17 @@ class AddUserScreen extends StatelessWidget {
             Navigator.pop(context);
           },
 
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: AppColors.black,
-          ),
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.black),
         ),
       ),
 
       body: Consumer<UserController>(
-        builder: (
-          context,
-          userProvider,
-          child,
-        ) {
+        builder: (context, userProvider, child) {
           return SafeArea(
             child: SingleChildScrollView(
-              padding:
-                  const EdgeInsets.symmetric(
-                horizontal:
-                    AppSizes.screenHorizontal,
-                vertical:
-                    AppSizes.screenVertical,
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.screenHorizontal,
+                vertical: AppSizes.screenVertical,
               ),
 
               child: Form(
@@ -72,35 +60,23 @@ class AddUserScreen extends StatelessWidget {
                 child: Container(
                   width: double.infinity,
 
-                  padding:
-                      const EdgeInsets.symmetric(
-                    horizontal:
-                        AppSizes.containerPadding,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.containerPadding,
                     vertical: 28,
                   ),
 
                   decoration: BoxDecoration(
                     color: AppColors.white,
 
-                    borderRadius:
-                        BorderRadius.circular(
-                      AppSizes.largeRadius,
-                    ),
+                    borderRadius: BorderRadius.circular(AppSizes.largeRadius),
 
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black
-                            .withValues(
-                          alpha: 0.05,
-                        ),
+                        color: Colors.black.withValues(alpha: 0.05),
 
                         blurRadius: 10,
 
-                        offset:
-                            const Offset(
-                          0,
-                          4,
-                        ),
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
@@ -109,96 +85,64 @@ class AddUserScreen extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () async {
-                          await userProvider
-                              .pickImage();
+                          await userProvider.pickImage();
                         },
 
                         child: Stack(
                           children: [
                             Container(
-                              width:
-                                  AppSizes
-                                      .avatarSize,
+                              width: AppSizes.avatarSize,
 
-                              height:
-                                  AppSizes
-                                      .avatarSize,
+                              height: AppSizes.avatarSize,
 
-                              decoration:
-                                  BoxDecoration(
-                                shape:
-                                    BoxShape.circle,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
 
-                                color:
-                                    const Color(
-                                  0xFFE9E9E9,
-                                ),
+                                color: const Color(0xFFE9E9E9),
 
-                                image:
-                                    userProvider.selectedImage !=
-                                            null
-                                        ? DecorationImage(
-                                            image:
-                                                FileImage(
-                                              File(
-                                                userProvider
-                                                    .selectedImage!
-                                                    .path,
-                                              ),
-                                            ),
+                                image: userProvider.selectedImage != null
+                                    ? DecorationImage(
+                                        image: FileImage(
+                                          File(
+                                            userProvider.selectedImage!.path,
+                                          ),
+                                        ),
 
-                                            fit: BoxFit
-                                                .cover,
-                                          )
-                                        : null,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : null,
                               ),
 
-                              child:
-                                  userProvider.selectedImage ==
-                                          null
-                                      ? const Icon(
-                                          Icons
-                                              .person,
+                              child: userProvider.selectedImage == null
+                                  ? const Icon(
+                                      Icons.person,
 
-                                          size:
-                                              AppSizes.avatarIconSize,
+                                      size: AppSizes.avatarIconSize,
 
-                                          color:
-                                              AppColors.hintGrey,
-                                        )
-                                      : null,
+                                      color: AppColors.hintGrey,
+                                    )
+                                  : null,
                             ),
 
                             Positioned(
                               bottom: 0,
                               right: 0,
 
-                              child:
-                                  Container(
-                                padding:
-                                    const EdgeInsets.all(
-                                  8,
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+
+                                decoration: const BoxDecoration(
+                                  color: AppColors.black,
+
+                                  shape: BoxShape.circle,
                                 ),
 
-                                decoration:
-                                    const BoxDecoration(
-                                  color:
-                                      AppColors.black,
+                                child: const Icon(
+                                  Icons.camera_alt,
 
-                                  shape:
-                                      BoxShape.circle,
-                                ),
+                                  size: AppSizes.cameraIconSize,
 
-                                child:
-                                    const Icon(
-                                  Icons
-                                      .camera_alt,
-
-                                  size:
-                                      AppSizes.cameraIconSize,
-
-                                  color:
-                                      AppColors.white,
+                                  color: AppColors.white,
                                 ),
                               ),
                             ),
@@ -206,183 +150,113 @@ class AddUserScreen extends StatelessWidget {
                         ),
                       ),
 
-                      const SizedBox(
-                        height:
-                            AppSizes.spacing32,
-                      ),
+                      const SizedBox(height: AppSizes.spacing32),
 
                       CustomTextField(
-                        controller:
-                            userProvider
-                                .nameController,
+                        controller: userProvider.nameController,
 
-                        hintText:
-                            AppStrings
-                                .fullName,
+                        hintText: AppStrings.fullName,
 
-                        validator:
-                            Validators
-                                .validateName,
+                        validator: Validators.validateName,
                       ),
 
-                      const SizedBox(
-                        height:
-                            AppSizes.spacing18,
-                      ),
+                      const SizedBox(height: AppSizes.spacing18),
 
                       CustomTextField(
-                        controller:
-                            userProvider
-                                .phoneController,
+                        controller: userProvider.phoneController,
 
-                        hintText:
-                            AppStrings
-                                .phoneNumber,
+                        hintText: AppStrings.phoneNumber,
 
-                        keyboardType:
-                            TextInputType.phone,
+                        keyboardType: TextInputType.phone,
 
-                        validator:
-                            Validators
-                                .validatePhone,
+                        validator: Validators.validatePhone,
                       ),
 
-                      const SizedBox(
-                        height:
-                            AppSizes.spacing18,
-                      ),
+                      const SizedBox(height: AppSizes.spacing18),
 
                       CustomTextField(
-                        controller:
-                            userProvider
-                                .ageController,
+                        controller: userProvider.ageController,
 
-                        hintText:
-                            AppStrings.age,
+                        hintText: AppStrings.age,
 
-                        keyboardType:
-                            TextInputType.number,
+                        keyboardType: TextInputType.number,
 
-                        validator:
-                            Validators
-                                .validateAge,
+                        validator: Validators.validateAge,
                       ),
 
-                      const SizedBox(
-                        height:
-                            AppSizes.spacing34,
-                      ),
+                      const SizedBox(height: AppSizes.spacing34),
 
                       Row(
                         children: [
                           Expanded(
-                            child:
-                                SizedBox(
-                              height:
-                                  AppSizes
-                                      .buttonHeight,
+                            child: SizedBox(
+                              height: AppSizes.buttonHeight,
 
-                              child:
-                                  OutlinedButton(
-                                onPressed:
-                                    () {
-                                  Navigator.pop(
-                                    context,
-                                  );
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
                                 },
 
-                                style:
-                                    OutlinedButton.styleFrom(
-                                  side:
-                                      const BorderSide(
-                                    color:
-                                        AppColors.black,
+                                style: OutlinedButton.styleFrom(
+                                  side: const BorderSide(
+                                    color: AppColors.black,
                                   ),
 
-                                  shape:
-                                      RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
                                       AppSizes.mediumRadius,
                                     ),
                                   ),
                                 ),
 
-                                child:
-                                    const Text(
-                                  AppStrings
-                                      .cancel,
+                                child: const Text(
+                                  AppStrings.cancel,
 
-                                  style:
-                                      TextStyle(
-                                    color:
-                                        AppColors.black,
+                                  style: TextStyle(
+                                    color: AppColors.black,
 
-                                    fontSize:
-                                        16,
+                                    fontSize: 16,
 
-                                    fontWeight:
-                                        FontWeight.w600,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ),
                             ),
                           ),
 
-                          const SizedBox(
-                            width:
-                                AppSizes.spacing16,
-                          ),
+                          const SizedBox(width: AppSizes.spacing16),
 
                           Expanded(
-                            child:
-                                PrimaryButton(
-                              text:
-                                  AppStrings
-                                      .save,
+                            child: PrimaryButton(
+                              text: AppStrings.save,
 
-                              isLoading:
-                                  userProvider
-                                      .isLoading,
+                              isLoading: userProvider.isLoading,
 
-                              onPressed:
-                                  () async {
+                              onPressed: () async {
                                 try {
-                                  await userProvider
-                                      .addUser();
+                                  final success = await userProvider.addUser();
 
-                                  if (!context
-                                      .mounted) {
+                                  if (!context.mounted) {
                                     return;
                                   }
 
-                                  SnackbarHelper
-                                      .showSuccessSnackBar(
-                                    context:
-                                        context,
+                                  if (success) {
+                                    SnackbarHelper.showSuccessSnackBar(
+                                      context: context,
+                                      message: AppStrings.userAdded,
+                                    );
 
-                                    message:
-                                        AppStrings
-                                            .userAdded,
-                                  );
-
-                                  Navigator.pop(
-                                    context,
-                                  );
+                                    Navigator.pop(context);
+                                  }
                                 } catch (e) {
-                                  if (!context
-                                      .mounted) {
+                                  if (!context.mounted) {
                                     return;
                                   }
 
-                                  SnackbarHelper
-                                      .showErrorSnackBar(
-                                    context:
-                                        context,
+                                  SnackbarHelper.showErrorSnackBar(
+                                    context: context,
 
-                                    message:
-                                        AppStrings
-                                            .somethingWentWrong,
+                                    message: AppStrings.somethingWentWrong,
                                   );
                                 }
                               },

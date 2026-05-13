@@ -73,4 +73,22 @@ class AppSizes {
   static const double usersTitleSize = 17;
 
   static const double listTopSpacing = 12;
+
+  static const double splashLogoSize =
+    110;
+
+static const double splashLogoRadius =
+    28;
+
+static const double splashIconSize =
+    55;
+
+static const double splashSpacing =
+    24;
+
+static const double splashTitleSize =
+    28;
+
+static const double splashLoaderSpacing =
+    40; 
 }
