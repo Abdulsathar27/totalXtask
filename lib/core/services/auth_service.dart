@@ -9,35 +9,48 @@ class AuthService {
   User? get currentUser => firebaseAuth.currentUser;
 
   Future<UserCredential?> signInWithGoogle() async {
-    try {
-      await googleSignIn.initialize();
+  try {
+    await googleSignIn.initialize();
 
-      final GoogleSignInAccount googleUser =
-          await googleSignIn.authenticate();
+    await googleSignIn.disconnect();
 
-      final GoogleSignInClientAuthorization? googleAuth =
-          await googleUser.authorizationClient
-              .authorizationForScopes(
-        ['email'],
-      );
+    final GoogleSignInAccount
+        googleUser =
+        await googleSignIn
+            .authenticate();
 
-      final AuthCredential credential =
-          GoogleAuthProvider.credential(
-        idToken: googleUser.authentication.idToken,
-        accessToken: googleAuth?.accessToken,
-      );
+    final GoogleSignInClientAuthorization?
+        googleAuth =
+        await googleUser
+            .authorizationClient
+            .authorizationForScopes(
+      ['email'],
+    );
 
-      final UserCredential userCredential =
-          await firebaseAuth.signInWithCredential(
-        credential,
-      );
+    final AuthCredential credential =
+        GoogleAuthProvider
+            .credential(
+      idToken:
+          googleUser
+              .authentication
+              .idToken,
 
-      return userCredential;
-    } catch (e) {
-      rethrow;
-    }
+      accessToken:
+          googleAuth?.accessToken,
+    );
+
+    final UserCredential
+        userCredential =
+        await firebaseAuth
+            .signInWithCredential(
+      credential,
+    );
+
+    return userCredential;
+  } catch (e) {
+    rethrow;
   }
-
+}
   Future<void> signOut() async {
     await googleSignIn.signOut();
 

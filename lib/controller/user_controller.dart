@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -72,64 +73,61 @@ class UserController extends ChangeNotifier {
       rethrow;
     }
   }
+
   Future<bool> addUser() async {
-  try {
-    if (!formKey.currentState!.validate()) {
-      return false;
-    }
+    try {
+      if (!formKey.currentState!.validate()) {
+        return false;
+      }
 
-    _isLoading = true;
+      _isLoading = true;
 
-    notifyListeners();
+      notifyListeners();
 
-    String imageUrl = '';
+      String imageUrl = '';
 
-    if (_selectedImage != null) {
-      imageUrl = await _storageService
-          .uploadUserImage(
-        _selectedImage!,
+      if (_selectedImage != null) {
+        imageUrl = await _storageService.uploadUserImage(_selectedImage!);
+      }
+      final currentUser = FirebaseAuth.instance.currentUser;
+
+      final user = UserModel(
+        id: '',
+
+        ownerId: currentUser?.uid ?? '',
+
+        name: nameController.text.trim(),
+
+        phone: phoneController.text.trim(),
+
+        age: int.parse(ageController.text.trim()),
+
+        imageUrl: imageUrl,
+
+        createdAt: Timestamp.now(),
       );
+
+      await _firestoreService.addUser(user);
+
+      nameController.clear();
+
+      phoneController.clear();
+
+      ageController.clear();
+
+      _selectedImage = null;
+
+      notifyListeners();
+
+      return true;
+    } catch (e) {
+      return false;
+    } finally {
+      _isLoading = false;
+
+      notifyListeners();
     }
-
-    final user = UserModel(
-      id: '',
-
-      name: nameController.text.trim(),
-
-      phone: phoneController.text.trim(),
-
-      age: int.parse(
-        ageController.text.trim(),
-      ),
-
-      imageUrl: imageUrl,
-
-      createdAt: Timestamp.now(),
-    );
-
-    await _firestoreService.addUser(
-      user,
-    );
-
-    nameController.clear();
-
-    phoneController.clear();
-
-    ageController.clear();
-
-    _selectedImage = null;
-
-    notifyListeners();
-
-    return true;
-  } catch (e) {
-    return false;
-  } finally {
-    _isLoading = false;
-
-    notifyListeners();
   }
-}
 
   Future<void> fetchUsers() async {
     try {
@@ -137,7 +135,9 @@ class UserController extends ChangeNotifier {
 
       notifyListeners();
 
-      _users = await _firestoreService.fetchUsers();
+      _users = await _firestoreService.fetchUsers(
+        FirebaseAuth.instance.currentUser!.uid,
+      );
 
       _filteredUsers = List.from(_users);
 
@@ -162,7 +162,11 @@ class UserController extends ChangeNotifier {
       notifyListeners();
 
       final QuerySnapshot querySnapshot = await _firestoreService
-          .fetchPaginatedUsers(lastDocument: _lastDocument);
+          .fetchPaginatedUsers(
+            ownerId: FirebaseAuth.instance.currentUser!.uid,
+
+            lastDocument: _lastDocument,
+          );
 
       if (querySnapshot.docs.isNotEmpty) {
         _lastDocument = querySnapshot.docs.last;
