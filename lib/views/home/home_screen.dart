@@ -3,9 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:totalxtask/controller/auth_controller.dart';
 import 'package:totalxtask/controller/user_controller.dart';
 import 'package:totalxtask/views/add_users/add_user_screen.dart';
+import 'package:totalxtask/views/auth/login_screen.dart';
+import 'package:totalxtask/widgets/empty_widget.dart';
 import 'package:totalxtask/widgets/user_card.dart';
 
-import '../auth/login_screen.dart';
+
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -19,13 +21,16 @@ class HomeScreen extends StatelessWidget {
           Future.microtask(() async {
             userProvider.resetPagination();
 
-            await userProvider.fetchPaginatedUsers();
+            await userProvider
+                .fetchPaginatedUsers();
           });
         }
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Users'),
+            title: const Text(
+              'Users',
+            ),
             actions: [
               PopupMenuButton<SortType>(
                 onSelected: (SortType value) {
@@ -34,11 +39,15 @@ class HomeScreen extends StatelessWidget {
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: SortType.ageAscending,
-                    child: Text('Age Ascending'),
+                    child: Text(
+                      'Age Ascending',
+                    ),
                   ),
                   const PopupMenuItem(
                     value: SortType.ageDescending,
-                    child: Text('Age Descending'),
+                    child: Text(
+                      'Age Descending',
+                    ),
                   ),
                 ],
               ),
@@ -46,22 +55,34 @@ class HomeScreen extends StatelessWidget {
               IconButton(
                 onPressed: () async {
                   try {
-                    await context.read<AuthController>().signOut();
+                    await context
+                        .read<AuthController>()
+                        .signOut();
 
                     if (context.mounted) {
                       Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(builder: (_) => const LoginScreen()),
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              const LoginScreen(),
+                        ),
                         (route) => false,
                       );
                     }
                   } catch (e) {
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text(e.toString())));
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          e.toString(),
+                        ),
+                      ),
+                    );
                   }
                 },
-                icon: const Icon(Icons.logout),
+                icon: const Icon(
+                  Icons.logout,
+                ),
               ),
             ],
           ),
@@ -70,15 +91,21 @@ class HomeScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: TextField(
-                  controller: userProvider.searchController,
+                  controller:
+                      userProvider.searchController,
                   onChanged: (value) {
-                    userProvider.searchUsers(value);
+                    userProvider.searchUsers(
+                      value,
+                    );
                   },
                   decoration: InputDecoration(
                     hintText: 'Search users',
-                    prefixIcon: const Icon(Icons.search),
+                    prefixIcon: const Icon(
+                      Icons.search,
+                    ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius:
+                          BorderRadius.circular(12),
                     ),
                   ),
                 ),
@@ -87,63 +114,123 @@ class HomeScreen extends StatelessWidget {
               Expanded(
                 child:
                     userProvider.filteredUsers.isEmpty &&
-                        userProvider.isPaginationLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : RefreshIndicator(
-                        onRefresh: () async {
-                          userProvider.resetPagination();
+                            userProvider
+                                .isPaginationLoading
+                        ? const Center(
+                            child:
+                                CircularProgressIndicator(),
+                          )
+                        : RefreshIndicator(
+                            onRefresh: () async {
+                              userProvider
+                                  .resetPagination();
 
-                          await userProvider.fetchPaginatedUsers();
-                        },
-                        child: NotificationListener<ScrollNotification>(
-                          onNotification: (scrollInfo) {
-                            if (scrollInfo.metrics.pixels >=
-                                scrollInfo.metrics.maxScrollExtent - 200) {
-                              userProvider.fetchPaginatedUsers();
-                            }
-
-                            return false;
-                          },
-                          child: ListView.builder(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            itemCount:
-                                userProvider.filteredUsers.length +
-                                (userProvider.isPaginationLoading ? 1 : 0),
-                            itemBuilder: (context, index) {
-                              if (index == userProvider.filteredUsers.length) {
-                                return const Padding(
-                                  padding: EdgeInsets.all(16),
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              }
-
-                              final user = userProvider.filteredUsers[index];
-
-                              return UserCard(user: user);
+                              await userProvider
+                                  .fetchPaginatedUsers();
                             },
+                            child:
+                                NotificationListener<
+                                    ScrollNotification>(
+                              onNotification:
+                                  (scrollInfo) {
+                                if (scrollInfo
+                                        .metrics
+                                        .pixels >=
+                                    scrollInfo
+                                            .metrics
+                                            .maxScrollExtent -
+                                        200) {
+                                  userProvider
+                                      .fetchPaginatedUsers();
+                                }
+
+                                return false;
+                              },
+                              child:
+                                  userProvider
+                                          .filteredUsers
+                                          .isEmpty
+                                      ? const EmptyStateWidget(
+                                          icon: Icons
+                                              .people_outline,
+                                          title:
+                                              'No Users Found',
+                                          subtitle:
+                                              'Add your first user to get started',
+                                        )
+                                      : ListView.builder(
+                                          physics:
+                                              const AlwaysScrollableScrollPhysics(),
+                                          padding:
+                                              const EdgeInsets.symmetric(
+                                            horizontal:
+                                                16,
+                                          ),
+                                          itemCount: userProvider
+                                                  .filteredUsers
+                                                  .length +
+                                              (userProvider
+                                                      .isPaginationLoading
+                                                  ? 1
+                                                  : 0),
+                                          itemBuilder:
+                                              (
+                                                context,
+                                                index,
+                                              ) {
+                                            if (index ==
+                                                userProvider
+                                                    .filteredUsers
+                                                    .length) {
+                                              return const Padding(
+                                                padding:
+                                                    EdgeInsets.all(
+                                                  16,
+                                                ),
+                                                child:
+                                                    Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                ),
+                                              );
+                                            }
+
+                                            final user =
+                                                userProvider
+                                                        .filteredUsers[
+                                                    index];
+
+                                            return UserCard(
+                                              user: user,
+                                            );
+                                          },
+                                        ),
+                            ),
                           ),
-                        ),
-                      ),
               ),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton:
+              FloatingActionButton(
             onPressed: () async {
               await Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const AddUserScreen()),
+                MaterialPageRoute(
+                  builder: (_) =>
+                      const AddUserScreen(),
+                ),
               );
 
               if (context.mounted) {
                 userProvider.resetPagination();
 
-                await userProvider.fetchPaginatedUsers();
+                await userProvider
+                    .fetchPaginatedUsers();
               }
             },
-            child: const Icon(Icons.add),
+            child: const Icon(
+              Icons.add,
+            ),
           ),
         );
       },
