@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:totalxtask/controller/auth_controller.dart';
 import 'package:totalxtask/controller/user_controller.dart';
 import 'package:totalxtask/views/add_users/add_user_screen.dart';
-
-
+import '../auth/login_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -46,6 +46,39 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+
+              IconButton(
+                onPressed: () async {
+                  try {
+                    await context
+                        .read<AuthController>()
+                        .signOut();
+
+                    if (context.mounted) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              const LoginScreen(),
+                        ),
+                        (route) => false,
+                      );
+                    }
+                  } catch (e) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          e.toString(),
+                        ),
+                      ),
+                    );
+                  }
+                },
+                icon: const Icon(
+                  Icons.logout,
+                ),
               ),
             ],
           ),
