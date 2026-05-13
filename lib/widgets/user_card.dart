@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/models/user_model.dart';
@@ -17,11 +18,30 @@ class UserCard extends StatelessWidget {
         bottom: 16,
       ),
       child: ListTile(
-        leading: CircleAvatar(
-          radius: 30,
-          backgroundImage: NetworkImage(
-            user.imageUrl,
-          ),
+        leading: CachedNetworkImage(
+          imageUrl: user.imageUrl,
+          imageBuilder:
+              (context, imageProvider) {
+            return CircleAvatar(
+              radius: 30,
+              backgroundImage: imageProvider,
+            );
+          },
+          placeholder: (context, url) {
+            return const CircleAvatar(
+              radius: 30,
+              child: CircularProgressIndicator(),
+            );
+          },
+          errorWidget:
+              (context, url, error) {
+            return const CircleAvatar(
+              radius: 30,
+              child: Icon(
+                Icons.person,
+              ),
+            );
+          },
         ),
         title: Text(
           user.name,
