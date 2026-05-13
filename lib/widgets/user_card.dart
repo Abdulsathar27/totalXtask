@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:totalxtask/core/constant/app_colors.dart';
+
 import '../../data/models/user_model.dart';
 
 class UserCard extends StatelessWidget {
@@ -14,63 +15,146 @@ class UserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      margin: const EdgeInsets.only(
+        bottom: 12,
+      ),
+
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 12,
+      ),
+
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: AppColors.white,
+
+        borderRadius:
+            BorderRadius.circular(24),
+
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
+            color: Colors.black.withOpacity(
+              0.035,
+            ),
+
+            blurRadius: 10,
+
+            spreadRadius: 0,
+
+            offset: const Offset(
+              0,
+              3,
+            ),
           ),
         ],
       ),
+
       child: Row(
         children: [
           CachedNetworkImage(
             imageUrl: user.imageUrl,
-            imageBuilder: (context, imageProvider) => CircleAvatar(
-              radius: 34,
-              backgroundImage: imageProvider,
-            ),
-            placeholder: (context, url) => const CircleAvatar(
-              radius: 34,
-              backgroundColor: AppColors.borderGrey,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-            errorWidget: (context, url, error) => const CircleAvatar(
-              radius: 34,
-              backgroundColor: AppColors.borderGrey,
-              child: Icon(Icons.person, size: 30, color: AppColors.hintGrey),
-            ),
+
+            imageBuilder:
+                (
+                  context,
+                  imageProvider,
+                ) {
+              return CircleAvatar(
+                radius: 32,
+
+                backgroundImage:
+                    imageProvider,
+              );
+            },
+
+            placeholder:
+                (
+                  context,
+                  url,
+                ) {
+              return const CircleAvatar(
+                radius: 32,
+
+                backgroundColor:
+                    AppColors.borderGrey,
+
+                child:
+                    CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              );
+            },
+
+            errorWidget:
+                (
+                  context,
+                  url,
+                  error,
+                ) {
+              return const CircleAvatar(
+                radius: 32,
+
+                backgroundColor:
+                    AppColors.borderGrey,
+
+                child: Icon(
+                  Icons.person,
+
+                  size: 28,
+
+                  color:
+                      AppColors.hintGrey,
+                ),
+              );
+            },
           ),
 
-          const SizedBox(width: 16),
+          const SizedBox(
+            width: 16,
+          ),
 
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+
+              mainAxisAlignment:
+                  MainAxisAlignment.center,
+
               children: [
                 Text(
                   user.name,
+
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+
+                  overflow:
+                      TextOverflow.ellipsis,
+
                   style: const TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black87,
+
+                    fontWeight:
+                        FontWeight.w600,
+
+                    color:
+                        AppColors.textDark,
                   ),
                 ),
-                const SizedBox(height: 4),
+
+                const SizedBox(
+                  height: 4,
+                ),
+
                 Text(
                   'Age: ${user.age}',
+
                   style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black54,
+                    fontSize: 14,
+
+                    fontWeight:
+                        FontWeight.w400,
+
+                    color:
+                        Colors.black54,
                   ),
                 ),
               ],
