@@ -7,6 +7,8 @@ class AppSpacing {
 
   static const double buttonRadius = 16;
 
+  static const double buttonRadiusfloat = 30;
+
   static const double cardPadding = 16;
 
   static const double sectionSpacing = 24;
