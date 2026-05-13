@@ -9,12 +9,33 @@ class FirestoreService {
       .collection('users');
 
   Future<void> addUser(UserModel user) async {
-    try {
-      await usersCollection.doc(user.id).set(user.toMap());
-    } catch (e) {
-      rethrow;
-    }
+  try {
+    final DocumentReference docRef =
+        usersCollection.doc();
+
+    final UserModel newUser = UserModel(
+      id: docRef.id,
+
+      name: user.name,
+
+      phone: user.phone,
+
+      age: user.age,
+
+      imageUrl: user.imageUrl,
+
+      createdAt: user.createdAt,
+    );
+
+    await docRef.set(
+      newUser.toMap(),
+    );
+  } catch (e) {
+    print(e.toString());
+
+    rethrow;
   }
+}
 
   Future<List<UserModel>> fetchUsers() async {
     try {

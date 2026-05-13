@@ -25,7 +25,7 @@ class CustomSearchBar
         boxShadow: [
           BoxShadow(
             color: Colors.black
-                .withOpacity(0.02),
+                .withAlpha(2),
 
             blurRadius: 6,
 

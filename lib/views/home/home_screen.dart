@@ -168,6 +168,7 @@ class HomeScreen extends StatelessWidget {
                                     .read<
                                         AuthController>()
                                     .signOut();
+                                    if (!context.mounted) return;
 
                                 if (context
                                     .mounted) {

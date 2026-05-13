@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uuid/uuid.dart';
 
 import '../core/services/firestore_service.dart';
 import '../core/services/storage_service.dart';
@@ -22,7 +21,7 @@ class UserController extends ChangeNotifier {
 
   final ImagePicker _imagePicker = ImagePicker();
 
-  final Uuid _uuid = const Uuid();
+  
 
   final TextEditingController nameController =
       TextEditingController();
