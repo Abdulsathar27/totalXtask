@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:totalxtask/core/constant/app_colors.dart';
-import 'package:totalxtask/core/constant/app_spacing.dart';
-
 
 class CustomSearchBar
     extends StatelessWidget {
@@ -18,21 +16,23 @@ class CustomSearchBar
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
-
       decoration: BoxDecoration(
         color: AppColors.white,
 
-        borderRadius: BorderRadius.circular(
-          AppSpacing.inputRadius,
-        ),
+        borderRadius:
+            BorderRadius.circular(16),
 
         boxShadow: [
           BoxShadow(
-            color:
-                AppColors.cardShadow,
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Colors.black
+                .withOpacity(0.02),
+
+            blurRadius: 6,
+
+            offset: const Offset(
+              0,
+              2,
+            ),
           ),
         ],
       ),
@@ -42,19 +42,32 @@ class CustomSearchBar
 
         onChanged: onChanged,
 
-        decoration: const InputDecoration(
-          hintText: 'Search users...',
+        style: const TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w400,
+          color: AppColors.textDark,
+        ),
 
-          prefixIcon: Icon(
+        decoration: InputDecoration(
+          hintText: 'Search users',
+
+          hintStyle: const TextStyle(
+            fontSize: 14,
+            color: AppColors.hintGrey,
+            fontWeight: FontWeight.w400,
+          ),
+
+          prefixIcon: const Icon(
             Icons.search,
+            size: 20,
             color: AppColors.hintGrey,
           ),
 
           border: InputBorder.none,
 
           contentPadding:
-              EdgeInsets.symmetric(
-            vertical: 18,
+              const EdgeInsets.symmetric(
+            vertical: 12,
           ),
         ),
       ),
