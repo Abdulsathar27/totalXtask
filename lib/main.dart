@@ -7,7 +7,7 @@ import 'package:totalxtask/controller/user_controller.dart';
 import 'package:totalxtask/core/theme/app_theme.dart';
 import 'package:totalxtask/views/auth/splash_screen.dart';
 import 'firebase_options.dart';
-import 'views/auth/login_screen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

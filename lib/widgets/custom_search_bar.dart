@@ -20,7 +20,7 @@ class CustomSearchBar
         color: AppColors.white,
 
         borderRadius:
-            BorderRadius.circular(16),
+            BorderRadius.circular(25),
 
         boxShadow: [
           BoxShadow(

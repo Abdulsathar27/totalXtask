@@ -31,8 +31,6 @@ class FirestoreService {
       newUser.toMap(),
     );
   } catch (e) {
-    print(e.toString());
-
     rethrow;
   }
 }

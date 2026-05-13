@@ -6,12 +6,15 @@ import 'package:totalxtask/core/constant/app_colors.dart';
 import 'package:totalxtask/core/constant/app_sizes.dart';
 import 'package:totalxtask/core/constant/app_spacing.dart';
 import 'package:totalxtask/core/constant/app_strings.dart';
+import 'package:totalxtask/core/constant/app_textstyles.dart';
 import 'package:totalxtask/core/utils/snackbar_helper.dart';
 import 'package:totalxtask/views/home/home_screen.dart';
 import 'package:totalxtask/widgets/google_signin_button.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +41,7 @@ class LoginScreen extends StatelessWidget {
                     MediaQuery.of(context)
                             .size
                             .height -
-                        40,
+                        AppSizes.loginScreenHeightOffset,
 
                 child: Column(
                   mainAxisAlignment:
@@ -65,16 +68,9 @@ class LoginScreen extends StatelessWidget {
                       AppStrings
                           .welcomeBack,
 
-                      style: Theme.of(
-                            context,
-                          )
-                          .textTheme
-                          .headlineLarge
-                          ?.copyWith(
-                            fontWeight:
-                                FontWeight
-                                    .bold,
-                          ),
+                      style:
+                          AppTextStyles
+                              .loginTitle,
                     ),
 
                     const SizedBox(
@@ -83,26 +79,22 @@ class LoginScreen extends StatelessWidget {
                               .mediumSpacing,
                     ),
 
-                    const Text(
+                    Text(
                       AppStrings
                           .loginSubtitle,
 
                       textAlign:
                           TextAlign.center,
 
-                      style: TextStyle(
-                        fontSize: 16,
-
-                        color:
-                            AppColors
-                                .hintGrey,
-
-                        height: 1.5,
-                      ),
+                      style:
+                          AppTextStyles
+                              .loginSubtitle,
                     ),
 
                     const SizedBox(
-                      height: 48,
+                      height:
+                          AppSizes
+                              .loginButtonSpacing,
                     ),
 
                     GoogleSignInButton(

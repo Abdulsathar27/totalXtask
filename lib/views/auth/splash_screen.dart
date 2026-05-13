@@ -12,7 +12,8 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future.microtask(() {
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) {
       context
           .read<SplashController>()
           .checkLogin(context);

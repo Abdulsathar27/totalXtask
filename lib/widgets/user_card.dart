@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:totalxtask/core/constant/app_colors.dart';
+import 'package:totalxtask/core/constant/app_sizes.dart';
+import 'package:totalxtask/core/constant/app_textstyles.dart';
 
 import '../../data/models/user_model.dart';
 
@@ -16,31 +18,41 @@ class UserCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(
-        bottom: 12,
+        bottom:
+            AppSizes.userCardBottomMargin,
       ),
 
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 12,
+      padding:
+          const EdgeInsets.symmetric(
+        horizontal:
+            AppSizes.userCardHorizontalPadding,
+
+        vertical:
+            AppSizes.userCardVerticalPadding,
       ),
 
-      decoration: BoxDecoration(
+      decoration:
+          BoxDecoration(
         color: AppColors.white,
 
         borderRadius:
-            BorderRadius.circular(24),
+            BorderRadius.circular(
+          AppSizes.userCardRadius,
+        ),
 
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(
-  alpha: 0.035,
-),
+            color: Colors.black
+                .withValues(
+              alpha: 0.035,
+            ),
 
             blurRadius: 10,
 
             spreadRadius: 0,
 
-            offset: const Offset(
+            offset:
+                const Offset(
               0,
               3,
             ),
@@ -51,7 +63,8 @@ class UserCard extends StatelessWidget {
       child: Row(
         children: [
           CachedNetworkImage(
-            imageUrl: user.imageUrl,
+            imageUrl:
+                user.imageUrl,
 
             imageBuilder:
                 (
@@ -59,7 +72,9 @@ class UserCard extends StatelessWidget {
                   imageProvider,
                 ) {
               return CircleAvatar(
-                radius: 32,
+                radius:
+                    AppSizes
+                        .userAvatarRadius,
 
                 backgroundImage:
                     imageProvider,
@@ -72,7 +87,9 @@ class UserCard extends StatelessWidget {
                   url,
                 ) {
               return const CircleAvatar(
-                radius: 32,
+                radius:
+                    AppSizes
+                        .userAvatarRadius,
 
                 backgroundColor:
                     AppColors.borderGrey,
@@ -91,7 +108,9 @@ class UserCard extends StatelessWidget {
                   error,
                 ) {
               return const CircleAvatar(
-                radius: 32,
+                radius:
+                    AppSizes
+                        .userAvatarRadius,
 
                 backgroundColor:
                     AppColors.borderGrey,
@@ -99,7 +118,9 @@ class UserCard extends StatelessWidget {
                 child: Icon(
                   Icons.person,
 
-                  size: 28,
+                  size:
+                      AppSizes
+                          .userAvatarIconSize,
 
                   color:
                       AppColors.hintGrey,
@@ -109,16 +130,19 @@ class UserCard extends StatelessWidget {
           ),
 
           const SizedBox(
-            width: 16,
+            width:
+                AppSizes.userCardSpacing,
           ),
 
           Expanded(
             child: Column(
               crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  CrossAxisAlignment
+                      .start,
 
               mainAxisAlignment:
-                  MainAxisAlignment.center,
+                  MainAxisAlignment
+                      .center,
 
               children: [
                 Text(
@@ -127,35 +151,40 @@ class UserCard extends StatelessWidget {
                   maxLines: 1,
 
                   overflow:
-                      TextOverflow.ellipsis,
+                      TextOverflow
+                          .ellipsis,
 
-                  style: const TextStyle(
-                    fontSize: 18,
-
-                    fontWeight:
-                        FontWeight.w600,
-
-                    color:
-                        AppColors.textDark,
-                  ),
+                  style:
+                      AppTextStyles
+                          .userNameText,
                 ),
 
                 const SizedBox(
-                  height: 4,
+                  height:
+                      AppSizes
+                          .userTextSpacing,
                 ),
 
                 Text(
                   'Age: ${user.age}',
 
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style:
+                      AppTextStyles
+                          .userSubText,
+                ),
 
-                    fontWeight:
-                        FontWeight.w400,
+                const SizedBox(
+                  height:
+                      AppSizes
+                          .userTextSpacing,
+                ),
 
-                    color:
-                        Colors.black54,
-                  ),
+                Text(
+                  'Phone: ${user.phone}',
+
+                  style:
+                      AppTextStyles
+                          .userSubText,
                 ),
               ],
             ),

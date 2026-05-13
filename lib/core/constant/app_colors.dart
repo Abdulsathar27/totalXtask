@@ -24,4 +24,5 @@ class AppColors {
   static const Color homeBackground = Color(0xFFF1F1F1);
 
   static const Color usersTitleColor = Color(0xFF4F4F4F);
+  static const Color avatarBackground = Color(0xFFE9E9E9);
 }

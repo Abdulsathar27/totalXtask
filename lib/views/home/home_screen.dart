@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:totalxtask/controller/auth_controller.dart';
 import 'package:totalxtask/controller/user_controller.dart';
 import 'package:totalxtask/core/constant/app_colors.dart';
+import 'package:totalxtask/core/constant/app_decoration.dart';
 import 'package:totalxtask/core/constant/app_sizes.dart';
 import 'package:totalxtask/core/constant/app_strings.dart';
+import 'package:totalxtask/core/constant/app_textstyles.dart';
 import 'package:totalxtask/core/utils/snackbar_helper.dart';
 import 'package:totalxtask/views/add_users/add_user_screen.dart';
 import 'package:totalxtask/views/auth/login_screen.dart';
@@ -14,16 +16,26 @@ import 'package:totalxtask/widgets/sort_bottom_sheet.dart';
 import 'package:totalxtask/widgets/user_card.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Consumer<UserController>(
-      builder: (context, userProvider, child) {
-        if (userProvider.filteredUsers.isEmpty &&
-            !userProvider.isPaginationLoading) {
+      builder: (
+        context,
+        userProvider,
+        child,
+      ) {
+        if (userProvider
+                .filteredUsers
+                .isEmpty &&
+            !userProvider
+                .isPaginationLoading) {
           Future.microtask(() async {
-            userProvider.resetPagination();
+            userProvider
+                .resetPagination();
 
             await userProvider
                 .fetchPaginatedUsers();
@@ -39,18 +51,26 @@ class HomeScreen extends StatelessWidget {
                   .endFloat,
 
           floatingActionButton: Padding(
-            padding: const EdgeInsets.only(
+            padding:
+                const EdgeInsets.only(
               bottom:
-                  AppSizes.fabBottomPadding,
+                  AppSizes
+                      .fabBottomPadding,
+
               right:
-                  AppSizes.fabRightPadding,
+                  AppSizes
+                      .fabRightPadding,
             ),
 
             child: SizedBox(
-              width: AppSizes.fabSize,
-              height: AppSizes.fabSize,
+              width:
+                  AppSizes.fabSize,
 
-              child: FloatingActionButton(
+              height:
+                  AppSizes.fabSize,
+
+              child:
+                  FloatingActionButton(
                 backgroundColor:
                     AppColors.black,
 
@@ -67,13 +87,16 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () async {
                   await Navigator.push(
                     context,
+
                     MaterialPageRoute(
-                      builder: (_) =>
-                          const AddUserScreen(),
+                      builder:
+                          (_) =>
+                              const AddUserScreen(),
                     ),
                   );
 
-                  if (!context.mounted) {
+                  if (!context
+                      .mounted) {
                     return;
                   }
 
@@ -88,7 +111,8 @@ class HomeScreen extends StatelessWidget {
                   Icons.add,
 
                   size:
-                      AppSizes.fabIconSize,
+                      AppSizes
+                          .fabIconSize,
 
                   color:
                       AppColors.white,
@@ -100,28 +124,36 @@ class HomeScreen extends StatelessWidget {
           body: SafeArea(
             child: Column(
               crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  CrossAxisAlignment
+                      .start,
 
               children: [
                 Container(
-                  width: double.infinity,
+                  width:
+                      double.infinity,
 
                   padding:
                       const EdgeInsets.only(
                     left:
-                        AppSizes.homePadding,
+                        AppSizes
+                            .homePadding,
+
                     right:
-                        AppSizes.homePadding,
+                        AppSizes
+                            .homePadding,
+
                     top:
-                        AppSizes.headerTopPadding,
+                        AppSizes
+                            .headerTopPadding,
+
                     bottom:
-                        AppSizes.headerBottomPadding,
+                        AppSizes
+                            .headerBottomPadding,
                   ),
 
                   decoration:
-                      const BoxDecoration(
-                    color: AppColors.black,
-                  ),
+                      AppDecorations
+                          .homeHeaderDecoration,
 
                   child: Column(
                     crossAxisAlignment:
@@ -136,21 +168,24 @@ class HomeScreen extends StatelessWidget {
 
                         children: [
                           Row(
-                            children: const [
-                              Icon(
-                                Icons.location_on,
+                            children: [
+                              const Icon(
+                                Icons
+                                    .location_on,
 
                                 color:
                                     AppColors
                                         .white,
 
                                 size:
-                                    AppSizes.locationIconSize,
+                                    AppSizes
+                                        .locationIconSize,
                               ),
 
-                              SizedBox(
+                              const SizedBox(
                                 width:
-                                    AppSizes.locationSpacing,
+                                    AppSizes
+                                        .locationSpacing,
                               ),
 
                               Text(
@@ -158,18 +193,8 @@ class HomeScreen extends StatelessWidget {
                                     .locationName,
 
                                 style:
-                                    TextStyle(
-                                  color:
-                                      AppColors
-                                          .white,
-
-                                  fontSize:
-                                      AppSizes.locationFontSize,
-
-                                  fontWeight:
-                                      FontWeight
-                                          .w500,
-                                ),
+                                    AppTextStyles
+                                        .locationText,
                               ),
                             ],
                           ),
@@ -225,7 +250,8 @@ class HomeScreen extends StatelessWidget {
                               Icons.logout,
 
                               size:
-                                  AppSizes.logoutIconSize,
+                                  AppSizes
+                                      .logoutIconSize,
 
                               color:
                                   AppColors
@@ -237,7 +263,8 @@ class HomeScreen extends StatelessWidget {
 
                       const SizedBox(
                         height:
-                            AppSizes.headerSpacing,
+                            AppSizes
+                                .headerSpacing,
                       ),
 
                       Row(
@@ -246,7 +273,8 @@ class HomeScreen extends StatelessWidget {
                             child:
                                 SizedBox(
                               height:
-                                  AppSizes.searchBarHeight,
+                                  AppSizes
+                                      .searchBarHeight,
 
                               child:
                                   CustomSearchBar(
@@ -269,7 +297,8 @@ class HomeScreen extends StatelessWidget {
 
                           const SizedBox(
                             width:
-                                AppSizes.filterSpacing,
+                                AppSizes
+                                    .filterSpacing,
                           ),
 
                           GestureDetector(
@@ -282,7 +311,8 @@ class HomeScreen extends StatelessWidget {
                                     Colors
                                         .transparent,
 
-                                builder: (_) {
+                                builder:
+                                    (_) {
                                   return const SortBottomSheet();
                                 },
                               );
@@ -291,36 +321,24 @@ class HomeScreen extends StatelessWidget {
                             child:
                                 Container(
                               width:
-                                  AppSizes.filterButtonSize,
+                                  AppSizes
+                                      .filterButtonSize,
 
                               height:
-                                  AppSizes.filterButtonSize,
+                                  AppSizes
+                                      .filterButtonSize,
 
                               decoration:
-                                  BoxDecoration(
-                                color:
-                                    AppColors
-                                        .black,
-
-                                border:
-                                    Border.all(
-                                  color:
-                                      AppColors
-                                          .hintGrey,
-                                ),
-
-                                borderRadius:
-                                    BorderRadius.circular(
-                                  AppSizes.filterRadius,
-                                ),
-                              ),
+                                  AppDecorations
+                                      .filterButtonDecoration,
 
                               child:
                                   const Icon(
                                 Icons.tune,
 
                                 size:
-                                    AppSizes.filterIconSize,
+                                    AppSizes
+                                        .filterIconSize,
 
                                 color:
                                     AppColors
@@ -336,35 +354,32 @@ class HomeScreen extends StatelessWidget {
 
                 const SizedBox(
                   height:
-                      AppSizes.homeTitleSpacing,
+                      AppSizes
+                          .homeTitleSpacing,
                 ),
 
-                const Padding(
+                Padding(
                   padding:
-                      EdgeInsets.symmetric(
+                      const EdgeInsets.symmetric(
                     horizontal:
-                        AppSizes.homePadding,
+                        AppSizes
+                            .homePadding,
                   ),
 
                   child: Text(
-                    AppStrings.usersList,
+                    AppStrings
+                        .usersList,
 
-                    style: TextStyle(
-                      fontSize:
-                          AppSizes.usersTitleSize,
-
-                      fontWeight:
-                          FontWeight.w700,
-
-                      color:
-                          AppColors.usersTitleColor,
-                    ),
+                    style:
+                        AppTextStyles
+                            .usersListTitle,
                   ),
                 ),
 
                 const SizedBox(
                   height:
-                      AppSizes.listTopSpacing,
+                      AppSizes
+                          .listTopSpacing,
                 ),
 
                 Expanded(
@@ -448,14 +463,15 @@ class HomeScreen extends StatelessWidget {
                                                   userProvider
                                                       .filteredUsers
                                                       .length) {
-                                                return const Padding(
+                                                return Padding(
                                                   padding:
                                                       EdgeInsets.all(
-                                                    16,
+                                                    AppSizes
+                                                        .loadingPadding,
                                                   ),
 
                                                   child:
-                                                      Center(
+                                                      const Center(
                                                     child:
                                                         CircularProgressIndicator(),
                                                   ),

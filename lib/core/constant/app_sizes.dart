@@ -74,21 +74,40 @@ class AppSizes {
 
   static const double listTopSpacing = 12;
 
-  static const double splashLogoSize =
-    110;
+  static const double splashLogoSize = 110;
 
-static const double splashLogoRadius =
-    28;
+  static const double splashLogoRadius = 28;
 
-static const double splashIconSize =
-    55;
+  static const double splashIconSize = 55;
 
-static const double splashSpacing =
-    24;
+  static const double splashSpacing = 24;
 
-static const double splashTitleSize =
-    28;
+  static const double splashTitleSize = 28;
 
-static const double splashLoaderSpacing =
-    40; 
+  static const double splashLoaderSpacing = 40;
+
+  static const double containerVerticalPadding = 28;
+
+  static const double smallPadding = 8;
+
+  static const double loginButtonSpacing = 48;
+
+  static const double loginScreenHeightOffset = 40;
+  static const double loadingPadding = 16;
+
+  static const double userCardBottomMargin = 12;
+
+  static const double userCardHorizontalPadding = 16;
+
+  static const double userCardVerticalPadding = 12;
+
+  static const double userCardRadius = 24;
+
+  static const double userAvatarRadius = 32;
+
+  static const double userAvatarIconSize = 28;
+
+  static const double userCardSpacing = 16;
+
+  static const double userTextSpacing = 4;
 }
