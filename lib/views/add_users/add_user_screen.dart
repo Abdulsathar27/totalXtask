@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:totalxtask/controller/user_controller.dart';
-
-
+import 'package:totalxtask/core/utils/snackbar_helper.dart';
 
 class AddUserScreen extends StatelessWidget {
   const AddUserScreen({super.key});
@@ -12,11 +11,7 @@ class AddUserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Add User',
-        ),
-      ),
+      appBar: AppBar(title: const Text('Add User')),
       body: Consumer<UserController>(
         builder: (context, userProvider, child) {
           return SingleChildScrollView(
@@ -31,39 +26,25 @@ class AddUserScreen extends StatelessWidget {
                     },
                     child: CircleAvatar(
                       radius: 60,
-                      backgroundImage:
-                          userProvider.selectedImage != null
-                              ? FileImage(
-                                  File(
-                                    userProvider
-                                        .selectedImage!
-                                        .path,
-                                  ),
-                                )
-                              : null,
-                      child:
-                          userProvider.selectedImage ==
-                                  null
-                              ? const Icon(
-                                  Icons.add_a_photo,
-                                  size: 40,
-                                )
-                              : null,
+                      backgroundImage: userProvider.selectedImage != null
+                          ? FileImage(File(userProvider.selectedImage!.path))
+                          : null,
+                      child: userProvider.selectedImage == null
+                          ? const Icon(Icons.add_a_photo, size: 40)
+                          : null,
                     ),
                   ),
 
                   const SizedBox(height: 30),
 
                   TextFormField(
-                    controller:
-                        userProvider.nameController,
+                    controller: userProvider.nameController,
                     decoration: const InputDecoration(
                       labelText: 'Name',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
-                      if (value == null ||
-                          value.trim().isEmpty) {
+                      if (value == null || value.trim().isEmpty) {
                         return 'Enter name';
                       }
 
@@ -74,16 +55,14 @@ class AddUserScreen extends StatelessWidget {
                   const SizedBox(height: 20),
 
                   TextFormField(
-                    controller:
-                        userProvider.phoneController,
+                    controller: userProvider.phoneController,
                     keyboardType: TextInputType.phone,
                     decoration: const InputDecoration(
                       labelText: 'Phone Number',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
-                      if (value == null ||
-                          value.trim().isEmpty) {
+                      if (value == null || value.trim().isEmpty) {
                         return 'Enter phone number';
                       }
 
@@ -94,16 +73,14 @@ class AddUserScreen extends StatelessWidget {
                   const SizedBox(height: 20),
 
                   TextFormField(
-                    controller:
-                        userProvider.ageController,
+                    controller: userProvider.ageController,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       labelText: 'Age',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
-                      if (value == null ||
-                          value.trim().isEmpty) {
+                      if (value == null || value.trim().isEmpty) {
                         return 'Enter age';
                       }
 
@@ -124,31 +101,19 @@ class AddUserScreen extends StatelessWidget {
                                 await userProvider.addUser();
 
                                 if (context.mounted) {
-                                  ScaffoldMessenger.of(
-                                    context,
-                                  ).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'User Added Successfully',
-                                      ),
-                                    ),
+                                  SnackbarHelper.showSuccessSnackBar(
+                                    context: context,
+                                    message: 'User Added Successfully',
                                   );
                                 }
                               } catch (e) {
-                                ScaffoldMessenger.of(
-                                  context,
-                                ).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      e.toString(),
-                                    ),
-                                  ),
+                                SnackbarHelper.showErrorSnackBar(
+                                  context: context,
+                                  message: 'Something went wrong',
                                 );
                               }
                             },
-                            child: const Text(
-                              'Add User',
-                            ),
+                            child: const Text('Add User'),
                           ),
                         ),
                 ],
