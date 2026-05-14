@@ -29,6 +29,7 @@ class StorageService {
 
       return downloadUrl;
     } catch (e) {
+      print('StorageService uploadUserImage error: $e');
       rethrow;
     }
   }
