@@ -110,4 +110,16 @@ class AppSizes {
   static const double userCardSpacing = 16;
 
   static const double userTextSpacing = 4;
+
+  static const double loginLabelFontSize = 13;
+
+  static const double welcomeTitleFontSize = 32;
+
+  static const double loginTopSpacing = 24;
+
+  static const double welcomeTitleHeight = 1.2;
+  static const double loginAccountFontSize =
+    20;
+    static const double loginTopPadding =
+    40;
 }

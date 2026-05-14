@@ -12,65 +12,143 @@ import 'package:totalxtask/views/home/home_screen.dart';
 import 'package:totalxtask/widgets/google_signin_button.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor:
+          AppColors.scaffoldBackground,
 
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.screenPadding,
-          ),
+          padding:
+              const EdgeInsets.symmetric(
+                horizontal:
+                    AppSpacing.screenPadding,
+              ),
 
           child: Consumer<AuthController>(
-            builder: (context, authProvider, child) {
+            builder:
+                (
+                  context,
+                  authProvider,
+                  child,
+                ) {
               return SizedBox(
                 height:
-                    MediaQuery.of(context).size.height -
-                    AppSizes.loginScreenHeightOffset,
+                    MediaQuery.of(context)
+                            .size
+                            .height -
+                        AppSizes
+                            .loginScreenHeightOffset,
 
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment:
+                      MainAxisAlignment.center,
 
                   children: [
-                    Image.asset(
-                      AppStrings.totalXLogo,
+                    
+                    Align(
+                      alignment:
+                          Alignment.centerLeft,
 
-                      height: AppSizes.logoHeight,
+                      child: Text(
+                        AppStrings
+                            .loginOrCreateAccount,
+
+                        style:
+                            AppTextStyles
+                                .loginAccountLabel,
+                      ),
+                    ),
+
+                    const SizedBox(
+                      height:
+                          AppSizes
+                              .loginTopSpacing,
+                    ),
+
+                    Text(
+                      AppStrings
+                          .welcomeTotalX,
+
+                      textAlign:
+                          TextAlign.center,
+
+                      style:
+                          AppTextStyles
+                              .welcomeTotalXStyle,
+                    ),
+
+                    const SizedBox(
+                      height:
+                          AppSpacing
+                              .extraLargeSpacing,
+                    ),
+
+                    Image.asset(
+                      AppStrings
+                          .totalXLogo,
+
+                      height:
+                          AppSizes
+                              .logoHeight,
 
                       fit: BoxFit.contain,
                     ),
 
-                    const SizedBox(height: AppSpacing.extraLargeSpacing),
-
-                    Text(
-                      AppStrings.welcomeBack,
-
-                      style: AppTextStyles.loginTitle,
+                    const SizedBox(
+                      height:
+                          AppSpacing
+                              .extraLargeSpacing,
                     ),
 
-                    const SizedBox(height: AppSpacing.mediumSpacing),
-
                     Text(
-                      AppStrings.loginSubtitle,
+                      AppStrings
+                          .welcomeBack,
 
-                      textAlign: TextAlign.center,
-
-                      style: AppTextStyles.loginSubtitle,
+                      style:
+                          AppTextStyles
+                              .loginTitle,
                     ),
 
-                    const SizedBox(height: AppSizes.loginButtonSpacing),
+                    const SizedBox(
+                      height:
+                          AppSpacing
+                              .mediumSpacing,
+                    ),
+
+                    Text(
+                      AppStrings
+                          .loginSubtitle,
+
+                      textAlign:
+                          TextAlign.center,
+
+                      style:
+                          AppTextStyles
+                              .loginSubtitle,
+                    ),
+
+                    const SizedBox(
+                      height:
+                          AppSizes
+                              .loginButtonSpacing,
+                    ),
 
                     GoogleSignInButton(
-                      isLoading: authProvider.isLoading,
+                      isLoading:
+                          authProvider
+                              .isLoading,
 
                       onPressed: () async {
                         try {
                           final bool signedIn =
-                              await authProvider.signInWithGoogle();
+                              await authProvider
+                                  .signInWithGoogle();
 
                           if (!signedIn) {
                             return;
@@ -80,22 +158,34 @@ class LoginScreen extends StatelessWidget {
                             return;
                           }
 
-                          final userProvider = context.read<UserController>();
+                          final userProvider =
+                              context.read<
+                                  UserController>();
 
-                          userProvider.resetPagination();
+                          userProvider
+                              .resetPagination();
 
-                          await userProvider.fetchPaginatedUsers();
+                          await userProvider
+                              .fetchPaginatedUsers();
 
                           if (!context.mounted) {
                             return;
                           }
 
-                          final String? loadError = userProvider.consumeError();
-                          if (loadError != null) {
-                            SnackbarHelper.showErrorSnackBar(
+                          final String?
+                          loadError =
+                              userProvider
+                                  .consumeError();
+
+                          if (loadError !=
+                              null) {
+                            SnackbarHelper
+                                .showErrorSnackBar(
                               context: context,
-                              message: loadError,
+                              message:
+                                  loadError,
                             );
+
                             return;
                           }
 
@@ -107,7 +197,9 @@ class LoginScreen extends StatelessWidget {
                             context,
 
                             MaterialPageRoute(
-                              builder: (_) => const HomeScreen(),
+                              builder:
+                                  (_) =>
+                                      const HomeScreen(),
                             ),
                           );
                         } catch (e) {
@@ -115,10 +207,13 @@ class LoginScreen extends StatelessWidget {
                             return;
                           }
 
-                          SnackbarHelper.showErrorSnackBar(
+                          SnackbarHelper
+                              .showErrorSnackBar(
                             context: context,
 
-                            message: AppStrings.googleSignInFailed,
+                            message:
+                                AppStrings
+                                    .googleSignInFailed,
                           );
                         }
                       },

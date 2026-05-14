@@ -316,6 +316,19 @@ class UserController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearSessionState() {
+    _users.clear();
+    _filteredUsers.clear();
+    _lastDocument = null;
+    _hasMore = true;
+    _isLoading = false;
+    _isPaginationLoading = false;
+    _lastErrorMessage = null;
+    searchController.clear();
+    _selectedImage = null;
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     nameController.dispose();

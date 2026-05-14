@@ -37,4 +37,8 @@ class AppStrings {
   static const String appName = 'TotalX User Management';
 
   static const String splashSubtitle = 'Manage Users Easily';
+
+  static const String loginOrCreateAccount = 'Login or create an Account';
+
+  static const String welcomeTotalX = 'Welcome\nTOTAL-X';
 }

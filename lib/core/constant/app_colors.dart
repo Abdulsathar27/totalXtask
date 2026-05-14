@@ -25,4 +25,8 @@ class AppColors {
 
   static const Color usersTitleColor = Color(0xFF4F4F4F);
   static const Color avatarBackground = Color(0xFFE9E9E9);
+
+  static const Color welcomeBlue = Color(0xFF1565C0);
+
+  static const Color loginLabelGrey = Colors.grey;
 }

@@ -34,48 +34,49 @@ class AppTextStyles {
 
     height: 1.5,
   );
-  static const TextStyle
-    locationText = TextStyle(
-      color: AppColors.white,
+  static const TextStyle locationText = TextStyle(
+    color: AppColors.white,
 
-      fontSize:
-          AppSizes.locationFontSize,
+    fontSize: AppSizes.locationFontSize,
 
-      fontWeight:
-          FontWeight.w500,
+    fontWeight: FontWeight.w500,
+  );
+
+  static const TextStyle usersListTitle = TextStyle(
+    fontSize: AppSizes.usersTitleSize,
+
+    fontWeight: FontWeight.w700,
+
+    color: AppColors.usersTitleColor,
+  );
+
+  static const TextStyle userNameText = TextStyle(
+    fontSize: 18,
+
+    fontWeight: FontWeight.w600,
+
+    color: AppColors.textDark,
+  );
+
+  static const TextStyle userSubText = TextStyle(
+    fontSize: 14,
+
+    fontWeight: FontWeight.w400,
+
+    color: Colors.black54,
+  );
+  static const TextStyle loginAccountLabel =
+    TextStyle(
+      fontSize: 20,
+      color: AppColors.textDark,
+      fontWeight: FontWeight.w700,
+      letterSpacing: 0.2,
     );
 
-static const TextStyle
-    usersListTitle = TextStyle(
-      fontSize:
-          AppSizes.usersTitleSize,
-
-      fontWeight:
-          FontWeight.w700,
-
-      color:
-          AppColors.usersTitleColor,
-    );
-
-    static const TextStyle
-    userNameText = TextStyle(
-      fontSize: 18,
-
-      fontWeight:
-          FontWeight.w600,
-
-      color:
-          AppColors.textDark,
-    );
-
-static const TextStyle
-    userSubText = TextStyle(
-      fontSize: 14,
-
-      fontWeight:
-          FontWeight.w400,
-
-      color:
-          Colors.black54,
-    );
+  static const TextStyle welcomeTotalXStyle = TextStyle(
+    fontSize: AppSizes.welcomeTitleFontSize,
+    fontWeight: FontWeight.bold,
+    color: AppColors.welcomeBlue,
+    height: AppSizes.welcomeTitleHeight,
+  );
 }

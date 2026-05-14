@@ -149,7 +149,13 @@ class HomeScreen extends StatelessWidget {
                           IconButton(
                             onPressed: () async {
                               try {
-                                await context.read<AuthController>().signOut();
+                                final authController =
+                                    context.read<AuthController>();
+                                final userController =
+                                    context.read<UserController>();
+
+                                await authController.signOut();
+                                userController.clearSessionState();
 
                                 if (!context.mounted) {
                                   return;

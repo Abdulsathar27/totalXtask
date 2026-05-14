@@ -49,17 +49,6 @@ class FirestoreService {
             await usersCollection.where('ownerId', isEqualTo: ownerId).get();
       }
 
-      if (querySnapshot.docs.isEmpty) {
-        // Fallback for legacy docs that may not have `ownerId` at all.
-        querySnapshot =
-            await usersCollection.orderBy('createdAt', descending: true).get();
-      }
-
-      if (querySnapshot.docs.isEmpty) {
-        // Final fallback when legacy docs also miss `createdAt`.
-        querySnapshot = await usersCollection.get();
-      }
-
       final List<UserModel> users =
           querySnapshot.docs.map((doc) {
             return UserModel.fromMap(
@@ -102,20 +91,6 @@ class FirestoreService {
                 .where('ownerId', isEqualTo: ownerId)
                 .limit(limit)
                 .get();
-      }
-
-      if (querySnapshot.docs.isEmpty && lastDocument == null) {
-        // Fallback for legacy docs that may not have `ownerId` at all.
-        querySnapshot =
-            await usersCollection
-                .orderBy('createdAt', descending: true)
-                .limit(limit)
-                .get();
-      }
-
-      if (querySnapshot.docs.isEmpty && lastDocument == null) {
-        // Final fallback when legacy docs also miss `createdAt`.
-        querySnapshot = await usersCollection.limit(limit).get();
       }
 
       return querySnapshot;
