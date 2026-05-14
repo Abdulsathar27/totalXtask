@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 class StorageService {
@@ -29,7 +30,7 @@ class StorageService {
 
       return downloadUrl;
     } catch (e) {
-      print('StorageService uploadUserImage error: $e');
+      debugPrint(e.toString());
       rethrow;
     }
   }

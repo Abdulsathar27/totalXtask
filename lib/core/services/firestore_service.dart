@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 import '../../data/models/user_model.dart';
 
@@ -30,7 +31,7 @@ class FirestoreService {
 
       await docRef.set(newUser.toMap());
     } catch (e) {
-      print('FirestoreService error: $e'); // add this line
+     debugPrint(e.toString());
       rethrow;
     }
   }
@@ -59,7 +60,7 @@ class FirestoreService {
 
       return users;
     } catch (e) {
-      print('FirestoreService error: $e'); // add this line
+      debugPrint(e.toString());
       rethrow;
     }
   }
@@ -95,7 +96,7 @@ class FirestoreService {
 
       return querySnapshot;
     } catch (e) {
-      print('FirestoreService error: $e'); // add this line
+      debugPrint(e.toString());
       rethrow;
     }
   }
