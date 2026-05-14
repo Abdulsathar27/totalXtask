@@ -16,106 +16,83 @@ import 'package:totalxtask/widgets/sort_bottom_sheet.dart';
 import 'package:totalxtask/widgets/user_card.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({
-    super.key,
-  });
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<UserController>(
-      builder: (
-        context,
-        userProvider,
-        child,
-      ) {
-        if (userProvider
-                .filteredUsers
-                .isEmpty &&
-            !userProvider
-                .isPaginationLoading) {
-          Future.microtask(() async {
-            userProvider
-                .resetPagination();
+      builder: (context, userProvider, child) {
+        final String? pendingError = userProvider.consumeError();
+        if (pendingError != null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!context.mounted) {
+              return;
+            }
+            SnackbarHelper.showErrorSnackBar(
+              context: context,
+              message: pendingError,
+            );
+          });
+        }
 
-            await userProvider
-                .fetchPaginatedUsers();
+        if (userProvider.filteredUsers.isEmpty &&
+            userProvider.hasMore &&
+            !userProvider.isPaginationLoading) {
+          Future.microtask(() async {
+            userProvider.resetPagination();
+
+            await userProvider.fetchPaginatedUsers();
           });
         }
 
         return Scaffold(
-          backgroundColor:
-              AppColors.homeBackground,
+          backgroundColor: AppColors.homeBackground,
 
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation
-                  .endFloat,
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
 
           floatingActionButton: Padding(
-            padding:
-                const EdgeInsets.only(
-              bottom:
-                  AppSizes
-                      .fabBottomPadding,
+            padding: const EdgeInsets.only(
+              bottom: AppSizes.fabBottomPadding,
 
-              right:
-                  AppSizes
-                      .fabRightPadding,
+              right: AppSizes.fabRightPadding,
             ),
 
             child: SizedBox(
-              width:
-                  AppSizes.fabSize,
+              width: AppSizes.fabSize,
 
-              height:
-                  AppSizes.fabSize,
+              height: AppSizes.fabSize,
 
-              child:
-                  FloatingActionButton(
-                backgroundColor:
-                    AppColors.black,
+              child: FloatingActionButton(
+                backgroundColor: AppColors.black,
 
                 elevation: 3,
 
-                shape:
-                    RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(
-                    AppSizes.fabRadius,
-                  ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppSizes.fabRadius),
                 ),
 
                 onPressed: () async {
                   await Navigator.push(
                     context,
 
-                    MaterialPageRoute(
-                      builder:
-                          (_) =>
-                              const AddUserScreen(),
-                    ),
+                    MaterialPageRoute(builder: (_) => const AddUserScreen()),
                   );
 
-                  if (!context
-                      .mounted) {
+                  if (!context.mounted) {
                     return;
                   }
 
-                  userProvider
-                      .resetPagination();
+                  userProvider.resetPagination();
 
-                  await userProvider
-                      .fetchPaginatedUsers();
+                  await userProvider.fetchPaginatedUsers();
                 },
 
                 child: const Icon(
                   Icons.add,
 
-                  size:
-                      AppSizes
-                          .fabIconSize,
+                  size: AppSizes.fabIconSize,
 
-                  color:
-                      AppColors.white,
+                  color: AppColors.white,
                 ),
               ),
             ),
@@ -123,93 +100,58 @@ class HomeScreen extends StatelessWidget {
 
           body: SafeArea(
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment
-                      .start,
+              crossAxisAlignment: CrossAxisAlignment.start,
 
               children: [
                 Container(
-                  width:
-                      double.infinity,
+                  width: double.infinity,
 
-                  padding:
-                      const EdgeInsets.only(
-                    left:
-                        AppSizes
-                            .homePadding,
+                  padding: const EdgeInsets.only(
+                    left: AppSizes.homePadding,
 
-                    right:
-                        AppSizes
-                            .homePadding,
+                    right: AppSizes.homePadding,
 
-                    top:
-                        AppSizes
-                            .headerTopPadding,
+                    top: AppSizes.headerTopPadding,
 
-                    bottom:
-                        AppSizes
-                            .headerBottomPadding,
+                    bottom: AppSizes.headerBottomPadding,
                   ),
 
-                  decoration:
-                      AppDecorations
-                          .homeHeaderDecoration,
+                  decoration: AppDecorations.homeHeaderDecoration,
 
                   child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment
-                            .start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
                     children: [
                       Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment
-                                .spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                         children: [
                           Row(
                             children: [
                               const Icon(
-                                Icons
-                                    .location_on,
+                                Icons.location_on,
 
-                                color:
-                                    AppColors
-                                        .white,
+                                color: AppColors.white,
 
-                                size:
-                                    AppSizes
-                                        .locationIconSize,
+                                size: AppSizes.locationIconSize,
                               ),
 
-                              const SizedBox(
-                                width:
-                                    AppSizes
-                                        .locationSpacing,
-                              ),
+                              const SizedBox(width: AppSizes.locationSpacing),
 
                               Text(
-                                AppStrings
-                                    .locationName,
+                                AppStrings.locationName,
 
-                                style:
-                                    AppTextStyles
-                                        .locationText,
+                                style: AppTextStyles.locationText,
                               ),
                             ],
                           ),
 
                           IconButton(
-                            onPressed:
-                                () async {
+                            onPressed: () async {
                               try {
-                                await context
-                                    .read<
-                                        AuthController>()
-                                    .signOut();
+                                await context.read<AuthController>().signOut();
 
-                                if (!context
-                                    .mounted) {
+                                if (!context.mounted) {
                                   return;
                                 }
 
@@ -217,132 +159,81 @@ class HomeScreen extends StatelessWidget {
                                   context,
 
                                   MaterialPageRoute(
-                                    builder:
-                                        (_) =>
-                                            const LoginScreen(),
+                                    builder: (_) => const LoginScreen(),
                                   ),
 
-                                  (
-                                    route,
-                                  ) =>
-                                      false,
+                                  (route) => false,
                                 );
                               } catch (e) {
-                                if (!context
-                                    .mounted) {
+                                if (!context.mounted) {
                                   return;
                                 }
 
-                                SnackbarHelper
-                                    .showErrorSnackBar(
-                                  context:
-                                      context,
+                                SnackbarHelper.showErrorSnackBar(
+                                  context: context,
 
-                                  message:
-                                      AppStrings
-                                          .logoutFailed,
+                                  message: AppStrings.logoutFailed,
                                 );
                               }
                             },
 
-                            icon:
-                                const Icon(
+                            icon: const Icon(
                               Icons.logout,
 
-                              size:
-                                  AppSizes
-                                      .logoutIconSize,
+                              size: AppSizes.logoutIconSize,
 
-                              color:
-                                  AppColors
-                                      .white,
+                              color: AppColors.white,
                             ),
                           ),
                         ],
                       ),
 
-                      const SizedBox(
-                        height:
-                            AppSizes
-                                .headerSpacing,
-                      ),
+                      const SizedBox(height: AppSizes.headerSpacing),
 
                       Row(
                         children: [
                           Expanded(
-                            child:
-                                SizedBox(
-                              height:
-                                  AppSizes
-                                      .searchBarHeight,
+                            child: SizedBox(
+                              height: AppSizes.searchBarHeight,
 
-                              child:
-                                  CustomSearchBar(
-                                controller:
-                                    userProvider
-                                        .searchController,
+                              child: CustomSearchBar(
+                                controller: userProvider.searchController,
 
-                                onChanged:
-                                    (
-                                      value,
-                                    ) {
-                                  userProvider
-                                      .searchUsers(
-                                    value,
-                                  );
+                                onChanged: (value) {
+                                  userProvider.searchUsers(value);
                                 },
                               ),
                             ),
                           ),
 
-                          const SizedBox(
-                            width:
-                                AppSizes
-                                    .filterSpacing,
-                          ),
+                          const SizedBox(width: AppSizes.filterSpacing),
 
                           GestureDetector(
                             onTap: () {
                               showModalBottomSheet(
-                                context:
-                                    context,
+                                context: context,
 
-                                backgroundColor:
-                                    Colors
-                                        .transparent,
+                                backgroundColor: Colors.transparent,
 
-                                builder:
-                                    (_) {
+                                builder: (_) {
                                   return const SortBottomSheet();
                                 },
                               );
                             },
 
-                            child:
-                                Container(
-                              width:
-                                  AppSizes
-                                      .filterButtonSize,
+                            child: Container(
+                              width: AppSizes.filterButtonSize,
 
-                              height:
-                                  AppSizes
-                                      .filterButtonSize,
+                              height: AppSizes.filterButtonSize,
 
-                              decoration:
-                                  AppDecorations
-                                      .filterButtonDecoration,
+                              decoration: AppDecorations.filterButtonDecoration,
 
-                              child:
-                                  const Icon(
+                              child: const Icon(
                                 Icons.tune,
 
-                                size:
-                                    AppSizes
-                                        .filterIconSize,
+                                size: AppSizes.filterIconSize,
 
-                                color:
-                                    AppColors
-                                        .white,
+                                color: AppColors.white,
                               ),
                             ),
                           ),
@@ -352,145 +243,92 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(
-                  height:
-                      AppSizes
-                          .homeTitleSpacing,
-                ),
+                const SizedBox(height: AppSizes.homeTitleSpacing),
 
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(
-                    horizontal:
-                        AppSizes
-                            .homePadding,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.homePadding,
                   ),
 
                   child: Text(
-                    AppStrings
-                        .usersList,
+                    AppStrings.usersList,
 
-                    style:
-                        AppTextStyles
-                            .usersListTitle,
+                    style: AppTextStyles.usersListTitle,
                   ),
                 ),
 
-                const SizedBox(
-                  height:
-                      AppSizes
-                          .listTopSpacing,
-                ),
+                const SizedBox(height: AppSizes.listTopSpacing),
 
                 Expanded(
                   child:
-                      userProvider
-                                  .filteredUsers
-                                  .isEmpty &&
-                              userProvider
-                                  .isPaginationLoading
-                          ? const Center(
-                              child:
-                                  CircularProgressIndicator(),
-                            )
+                      userProvider.filteredUsers.isEmpty &&
+                              userProvider.isPaginationLoading
+                          ? const Center(child: CircularProgressIndicator())
                           : RefreshIndicator(
-                              onRefresh:
-                                  () async {
-                                userProvider
-                                    .resetPagination();
+                            onRefresh: () async {
+                              userProvider.resetPagination();
 
-                                await userProvider
-                                    .fetchPaginatedUsers();
+                              await userProvider.fetchPaginatedUsers();
+                            },
+
+                            child: NotificationListener<ScrollNotification>(
+                              onNotification: (scrollInfo) {
+                                if (scrollInfo.metrics.pixels >=
+                                    scrollInfo.metrics.maxScrollExtent - 200) {
+                                  userProvider.fetchPaginatedUsers();
+                                }
+
+                                return false;
                               },
 
                               child:
-                                  NotificationListener<
-                                      ScrollNotification>(
-                                onNotification:
-                                    (
-                                      scrollInfo,
-                                    ) {
-                                  if (scrollInfo
-                                          .metrics
-                                          .pixels >=
-                                      scrollInfo
-                                              .metrics
-                                              .maxScrollExtent -
-                                          200) {
-                                    userProvider
-                                        .fetchPaginatedUsers();
-                                  }
+                                  userProvider.filteredUsers.isEmpty
+                                      ? const EmptyStateWidget(
+                                        icon: Icons.people_outline,
 
-                                  return false;
-                                },
+                                        title: AppStrings.noUsersFound,
 
-                                child:
-                                    userProvider
-                                            .filteredUsers
-                                            .isEmpty
-                                        ? const EmptyStateWidget(
-                                            icon:
-                                                Icons.people_outline,
+                                        subtitle: AppStrings.emptyUsersSubtitle,
+                                      )
+                                      : ListView.builder(
+                                        physics:
+                                            const AlwaysScrollableScrollPhysics(),
 
-                                            title:
-                                                AppStrings.noUsersFound,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: AppSizes.homePadding,
+                                        ),
 
-                                            subtitle:
-                                                AppStrings.emptyUsersSubtitle,
-                                          )
-                                        : ListView.builder(
-                                            physics:
-                                                const AlwaysScrollableScrollPhysics(),
+                                        itemCount:
+                                            userProvider.filteredUsers.length +
+                                            (userProvider.isPaginationLoading
+                                                ? 1
+                                                : 0),
 
-                                            padding:
-                                                const EdgeInsets.symmetric(
-                                              horizontal:
-                                                  AppSizes.homePadding,
-                                            ),
+                                        itemBuilder: (context, index) {
+                                          if (index ==
+                                              userProvider
+                                                  .filteredUsers
+                                                  .length) {
+                                            return Padding(
+                                              padding: EdgeInsets.all(
+                                                AppSizes.loadingPadding,
+                                              ),
 
-                                            itemCount:
-                                                userProvider.filteredUsers.length +
-                                                    (userProvider.isPaginationLoading
-                                                        ? 1
-                                                        : 0),
+                                              child: const Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
+                                            );
+                                          }
 
-                                            itemBuilder:
-                                                (
-                                                  context,
-                                                  index,
-                                                ) {
-                                              if (index ==
-                                                  userProvider
-                                                      .filteredUsers
-                                                      .length) {
-                                                return Padding(
-                                                  padding:
-                                                      EdgeInsets.all(
-                                                    AppSizes
-                                                        .loadingPadding,
-                                                  ),
+                                          final user =
+                                              userProvider.filteredUsers[index];
 
-                                                  child:
-                                                      const Center(
-                                                    child:
-                                                        CircularProgressIndicator(),
-                                                  ),
-                                                );
-                                              }
-
-                                              final user =
-                                                  userProvider
-                                                          .filteredUsers[
-                                                      index];
-
-                                              return UserCard(
-                                                user:
-                                                    user,
-                                              );
-                                            },
-                                          ),
-                              ),
+                                          return UserCard(user: user);
+                                        },
+                                      ),
                             ),
+                          ),
                 ),
               ],
             ),
